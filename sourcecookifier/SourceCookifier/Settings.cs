@@ -36,7 +36,7 @@ namespace NppPluginNET
 			public bool ShowIcons = true;
 			public bool FlatView = false;
 			public bool KeepTypesGrouped = true;
-			public bool ShowInvalidSources = false;
+			public bool ShowInvalidSources = true;
 			public bool SearchInSession = false;
 			
 			public SessionMode SessionMode = SessionMode.None;
