@@ -1,0 +1,50 @@
+!_TAG_FILE_FORMAT2/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED1/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHORDarren Hiebert/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAMEExuberant Ctags//
+!_TAG_PROGRAM_URLhttp://ctags.sourceforge.net/official site/
+!_TAG_PROGRAM_VERSION5.8.1.SC//
+O_RDWRentry2.c71;"dfile:
+PSEUDO_TAG_PREFIXentry2.c54;"dfile:
+TagFileentry2.c/^tagFile TagFile = {$/;"v
+TagsToStdoutentry2.c/^static boolean TagsToStdout = FALSE;$/;"vfile:
+USE_REPLACEMENT_TRUNCATEentry2.c62;"dfile:
+addExtensionFieldsentry2.c/^static int addExtensionFields (const tagEntryInfo *const tag)$/;"ffile:
+addPseudoTagsentry2.c/^static void addPseudoTags (void)$/;"ffile:
+beginEtagsFileentry2.c/^extern void beginEtagsFile (void)$/;"f
+chsizeentry2.c68;"dfile:
+closeentry2.c70;"dfile:
+closeTagFileentry2.c/^extern void closeTagFile (const boolean resize)$/;"f
+copyBytesentry2.c/^extern void copyBytes (FILE* const fromFp, FILE* const toFp, const long size)$/;"f
+copyFileentry2.c/^extern void copyFile (const char *const from, const char *const to, const long size)$/;"f
+endEtagsFileentry2.c/^extern void endEtagsFile (const char *const name)$/;"f
+fieldentry2.c282;"dfile:
+freeTagFileResourcesentry2.c/^extern void freeTagFileResources (void)$/;"f
+includeExtensionFlagsentry2.c56;"dfile:
+initTagEntryentry2.c/^extern void initTagEntry (tagEntryInfo *const e, const char *const name)$/;"f
+isCtagsLineentry2.c/^static boolean isCtagsLine (const char *const line)$/;"ffile:
+isEtagsLineentry2.c/^static boolean isEtagsLine (const char *const line)$/;"ffile:
+isTagFileentry2.c/^static boolean isTagFile (const char *const filename)$/;"ffile:
+isValidTagAddressentry2.c/^static boolean isValidTagAddress (const char *const excmd)$/;"ffile:
+makeTagEntryentry2.c/^extern void makeTagEntry (const tagEntryInfo *const tag)$/;"f
+openentry2.c69;"dfile:
+openTagFileentry2.c/^extern void openTagFile (void)$/;"f
+rememberMaxLengthsentry2.c/^static void rememberMaxLengths (const size_t nameLength, const size_t lineLength)$/;"ffile:
+replacementTruncateentry2.c/^static int replacementTruncate (const char *const name, const long size)$/;"ffile:
+resizeTagFileentry2.c/^static void resizeTagFile (const long newSize)$/;"ffile:
+sepentry2.c713;"dfile:
+sepentry2.c765;"dfile:
+sortTagFileentry2.c/^static void sortTagFile (void)$/;"ffile:
+tagFileNameentry2.c/^extern const char *tagFileName (void)$/;"f
+truncateTagLineentry2.c/^static void truncateTagLine ($/;"ffile:
+updatePseudoTagsentry2.c/^static long unsigned int updatePseudoTags (FILE *const fp)$/;"ffile:
+updateSortedFlagentry2.c/^static void updateSortedFlag ($/;"ffile:
+writeCompactSourceLineentry2.c/^static size_t writeCompactSourceLine (FILE *const fp, const char *const line)$/;"ffile:
+writeCtagsEntryentry2.c/^static int writeCtagsEntry (const tagEntryInfo *const tag)$/;"ffile:
+writeEtagsEntryentry2.c/^static int writeEtagsEntry (const tagEntryInfo *const tag)$/;"ffile:
+writeEtagsIncludesentry2.c/^static void writeEtagsIncludes (FILE *const fp)$/;"ffile:
+writeLineNumberEntryentry2.c/^static int writeLineNumberEntry (const tagEntryInfo *const tag)$/;"ffile:
+writePatternEntryentry2.c/^static int writePatternEntry (const tagEntryInfo *const tag)$/;"ffile:
+writePseudoTagentry2.c/^static void writePseudoTag ($/;"ffile:
+writeSourceLineentry2.c/^static size_t writeSourceLine (FILE *const fp, const char *const line)$/;"ffile:
+writeXrefEntryentry2.c/^static int writeXrefEntry (const	tagEntryInfo	*const	tag)$/;"ffile:
