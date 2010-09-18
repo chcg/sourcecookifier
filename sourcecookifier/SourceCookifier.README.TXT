@@ -8,6 +8,23 @@ INSTALLATION:
 
 CHANGES:
 -------------
+    0.5.4
+       -new: 2 batch files for adding/removing a .NET policy for the plugin on the current machine -
+             this policy is required when starting N++ on a network location and using sourcecookifier!
+       -new: enable (in CTAGS) 'Mac OS 9' form for source code parser (EOL = CR)
+       -fix: bring import dialog to top
+       -fix: crash when tab window is initialized in 'N++ session mode'
+       -fix: sources in treeview don't get added/removed when tab window is in 'N++ session mode' but hidden
+       -changed: disable treeview ui while importing sources (speedup)
+       -changed: scope-name-delimiter now '.' instead of '::'
+       -changed: show invalid sources by default
+    0.5.3
+       -new: show session mode/name in toolbar caption 
+       -fix: 1252 as default encoding for streams and stdout (since v0.5 SourceCookifier didn't work
+             at all for people using non-western-european region/language on their machine!) 
+       -fix: show error in node tooltip when ctags.exe returns error (while not using tags file) 
+       -fix: remove/move in context menu for invalid source nodes 
+       -fix: save error/path info of invalid source nodes (in .c00k!e files)
     0.5.2
        -new: PHP appearance customization (thanks to Thériault)
        -new: session button icon overlays

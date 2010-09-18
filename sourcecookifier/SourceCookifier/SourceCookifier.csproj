@@ -107,6 +107,8 @@
 copy "$(ProjectDir)Setup\Config\SourceCookifier.languages.model.xml" "$(ProjectDir)$(OutDir)..\Config
 mkdir "$(ProjectDir)$(OutDir)icons"
 copy "$(ProjectDir)Setup\SourceCookifier\ctags.exe" "$(ProjectDir)$(OutDir)
+copy "$(ProjectDir)Setup\SourceCookifier\AddPolicy.bat" "$(ProjectDir)$(OutDir)
+copy "$(ProjectDir)Setup\SourceCookifier\RemovePolicy.bat" "$(ProjectDir)$(OutDir)
 copy "$(ProjectDir)Setup\SourceCookifier\icons\*.png" "$(ProjectDir)$(OutDir)icons</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>

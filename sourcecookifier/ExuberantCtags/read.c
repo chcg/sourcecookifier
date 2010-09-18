@@ -362,12 +362,12 @@ readnext:
 		 * used forms if line breaks: LF (UNIX/Mac OS X), CR (Mac OS 9),
 		 * and CR-LF (MS-DOS) are converted into a generic newline.
 		 */
-#ifndef macintosh
-		const int next = getc (File.fp);  /* is CR followed by LF? */
-		if (next != NEWLINE)
-			ungetc (next, File.fp);
-		else
-#endif
+// #ifndef macintosh
+		// const int next = getc (File.fp);  /* is CR followed by LF? */
+		// if (next != NEWLINE)
+			// ungetc (next, File.fp);
+		// else
+// #endif
 		{
 			c = NEWLINE;  /* convert CR into newline */
 			File.newLine = TRUE;

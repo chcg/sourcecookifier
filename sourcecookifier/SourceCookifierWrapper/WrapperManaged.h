@@ -1,3 +1,5 @@
+#pragma warning( disable : 4947 ) // 'AppendPrivatePath' has been deprecated..
+
 using namespace System;
 using namespace System::IO;
 using namespace System::Reflection;

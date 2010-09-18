@@ -516,7 +516,7 @@ namespace NppPluginNET
 		}
 		
 		public bool SavingDocNow = false;
-		void DoAllOpenedDocuments()
+		public void DoAllOpenedDocuments()
 		{
 			PluginBase.TRACE("-START-");
             int nbFile = (int)Win32.SendMessage(pluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
@@ -524,7 +524,18 @@ namespace NppPluginNET
             {
                 if (Win32.SendMessage(pluginBase.nppData._nppHandle, NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
                 {
-                	DoTags(cStrArray.ManagedStringsUnicode.ToArray());
+                	List<string> lstNewSources = new List<string>();
+                	foreach (string s in cStrArray.ManagedStringsUnicode)
+                		lstNewSources.Add(s);
+                	for (int i = tvTags.Nodes.Count; i > 0; i--)
+                	{
+                		Source source = tvTags.Nodes[i - 1].Tag as Source;
+                		if ((source != null) && (cStrArray.ManagedStringsUnicode.Contains(source.PathUnquoted)))
+                			lstNewSources.Remove(source.PathUnquoted);
+                		else
+                			tvTags.Nodes.RemoveAt(i - 1);
+                	}
+               		DoTags(lstNewSources.ToArray());
                 }
             }
 			PluginBase.TRACE("-END-");
@@ -632,6 +643,7 @@ namespace NppPluginNET
 	    	PluginBase.TRACE(string.Format("Tagging {0} file(s).. searching={1}.. progressBar={2}.. droppedWithModKey={3}.. SavingDocNow={4}",
 	    	    flattenedFiles.Count, searching, progressBar, droppedWithModKey, SavingDocNow));
 	    	if (progressBar) ProgressBarShow(flattenedFiles.Count);
+	    	tvTags.BeginUpdate();
         	foreach (string file in flattenedFiles)
         	{
 				if (progressBar) ProgressBarUpdate();
@@ -681,6 +693,7 @@ namespace NppPluginNET
             		}
         		}
         	}
+        	tvTags.EndUpdate();
         	SelectTagNodeByCurrentLine(true);
         	
         	if (progressBar) ProgressBarHide();
@@ -1308,6 +1321,7 @@ namespace NppPluginNET
 			PluginBase.TRACE("-START-");
 			try
 			{
+				if (pluginBase._ptrNppTbData == IntPtr.Zero) return;
 				string caption = "SourceCookifier - ";
 				if (Settings.Configs.SessionMode == Settings.SessionMode.None)
 					caption += "[Single file]";

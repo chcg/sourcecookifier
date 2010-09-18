@@ -114,6 +114,8 @@ namespace NppPluginNET
 	            	{
 		                Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, frmMain.Handle);
 		                frmMain.tvTags.Focus();
+						if (Settings.Configs.SessionMode == Settings.SessionMode.Npp)
+							frmMain.DoAllOpenedDocuments();
 		                TRACE("frmMain shown and focused");
 		           	}
 	            }
@@ -540,7 +542,7 @@ namespace NppPluginNET
 		// Following functionality only works with my modded Notepad++ version,
 		// because the official Notepad++ doesn't expose a function for plug-ins,
 		// which searches a given list of files for a text string...
-        int NPPM_LAUNCHFINDINFILESDIRECTLY = 0x0400 + 1000 + 78;
+        int NPPM_LAUNCHFINDINFILESDIRECTLY = 0x0400 + 1000 + 99;
         void FindInSession()
         {
         	TRACE("-START-");

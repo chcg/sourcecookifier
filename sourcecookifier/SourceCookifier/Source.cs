@@ -445,7 +445,7 @@ namespace NppPluginNET
 				Signature = " " + field.Replace("signature:", "").Replace('\t', ' ');
 			else
 			{
-				try { Scope = field.Split(':')[1].Replace('\t', ' ') + "::"; }
+				try { Scope = field.Split(':')[1].Replace('\t', ' ') + "."; }
 				catch { Scope = "***Invalid extended field: \"" + field + "\" *** "; }
 			}
 			PluginBase.TRACE(string.Format("field={0} Access={1} Signature={2} Scope={3}", field, Access, Signature, Scope));
@@ -594,7 +594,7 @@ namespace NppPluginNET
 				Signature = " " + field.Replace("signature:", "").Replace('\t', ' ');
 			else
 			{
-				try { Scope = field.Split(':')[1].Replace('\t', ' ') + "::"; }
+				try { Scope = field.Split(':')[1].Replace('\t', ' ') + "."; }
 				catch { Scope = "***Invalid extended field: \"" + field + "\" *** "; }
 			}
 			PluginBase.TRACE(string.Format("field={0} Access={1} Signature={2} Scope={3}", field, Access, Signature, Scope));

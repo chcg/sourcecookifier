@@ -27,8 +27,8 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,5,3,0
- PRODUCTVERSION 0,5,3,0
+ FILEVERSION 0,5,4,0
+ PRODUCTVERSION 0,5,4,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -45,12 +45,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "UFO-Pu55y"
             VALUE "FileDescription", "SourceCookifier [Unicode]"
-            VALUE "FileVersion", "0, 5, 3, 0"
+            VALUE "FileVersion", "0, 5, 4, 0"
             VALUE "InternalName", "NppPluginWrapper"
             VALUE "LegalCopyright", "Copyleft (c) UFO-Pu55y 2010"
             VALUE "OriginalFilename", "SourceCookifierWrapper"
             VALUE "ProductName", "SourceCookifierWrapper"
-            VALUE "ProductVersion", "0, 5, 3, 0"
+            VALUE "ProductVersion", "0, 5, 4, 0"
         END
     END
     BLOCK "VarFileInfo"

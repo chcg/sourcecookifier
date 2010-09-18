@@ -17,7 +17,7 @@ namespace NppPluginNET
 {
 	class CTagsExe
 	{
-		static string cTagsVersion = "5.8.1.SC";
+		static string cTagsVersion = "5.8.2.SC";
 		static string cTagsExePath;
 		static string tagsFilePath;
 		static string stdOut;

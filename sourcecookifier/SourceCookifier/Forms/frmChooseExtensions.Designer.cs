@@ -81,6 +81,7 @@ namespace NppPluginNET
 			this.Name = "frmChooseExtensions";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Import";
+			this.Shown += new System.EventHandler(this.FrmChooseExtensionsShown);
 			this.ResumeLayout(false);
 		}
 		internal System.Windows.Forms.CheckedListBox lbExtensions;
