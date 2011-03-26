@@ -5,7 +5,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 	if (reason == DLL_PROCESS_ATTACH) {
 		hMod = hModule;
 		LPWSTR pFilename;
-		TCHAR szBuffer[MAX_PATH];
 		DWORD len = GetModuleFileName(hModule, szPluginPath, MAX_PATH);
 		if (len) {
 			pFilename = PathFindFileName(szPluginPath);
@@ -115,6 +114,31 @@ BOOL GetPluginWrapper()
 	return (pluginWrapperLoaded = TRUE);
 }
 
+void LoadConfigs()
+{
+	SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)szBuffer);
+	wsprintf(szPluginConfig, L"%s\\SourceCookifier.config.xml", szBuffer);
+
+	std::string line;
+	std::ifstream sFile;
+
+	sFile.open(szPluginConfig);
+	if (sFile.is_open())
+	{
+		while (!sFile.eof())
+		{
+			getline(sFile, line);
+			if (line.find("StartupShowMode>Hide<", 0) != std::string::npos) {
+				HideAtStartup = TRUE;
+			}
+			else if (line.find("StartupShowMode>Show<", 0) != std::string::npos) {
+				ShowAtStartup = TRUE;
+			}
+		}
+		sFile.close();
+	}
+}
+
 extern "C" __declspec(dllexport) BOOL isUnicode()
 {
     return TRUE;
@@ -122,6 +146,7 @@ extern "C" __declspec(dllexport) BOOL isUnicode()
 extern "C" __declspec(dllexport) void setInfo(NppData notepadPlusData)
 {
 	nppData = notepadPlusData;
+	LoadConfigs();
 }
 extern "C" __declspec(dllexport) FuncItem * getFuncsArray(int *nbF)
 {
@@ -166,6 +191,11 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 		SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&tbIcons);
 		return;
 	}
+	else if (notifyCode->nmhdr.code == NPPN_READY)
+	{
+		if (!FormShown && ShowAtStartup)
+			ShowFrmMain();
+	}
 	if (pluginWrapperLoaded) {
 		W_beNotified(notifyCode);
 	}
@@ -178,6 +208,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 				LPWSTR pExt = PathFindExtension(szPath);
 				if (!lstrcmp(pExt, L".c00k!e")) {
 					if (GetPluginWrapper()) {
+						FormShown = TRUE;
 						W_beNotified(notifyCode);
 					}
 				}
@@ -202,7 +233,20 @@ void setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, bool check0n
     funcItem[index]._pShKey = pShKey;
 }
 
-void ShowFrmMain() { if (GetPluginWrapper() && CORE_ShowFrmMain) CORE_ShowFrmMain(); }
+void ShowFrmMain()
+{
+	if (HideAtStartup)
+	{
+		HideAtStartup = FALSE;
+		return;
+	}
+	if (GetPluginWrapper() && CORE_ShowFrmMain)
+	{
+		ShowAtStartup = FALSE;
+		FormShown = TRUE;
+		CORE_ShowFrmMain();
+	}
+}
 void GoToDefinition() { if (GetPluginWrapper() && CORE_GoToDefinition) CORE_GoToDefinition(); }
 void NavigateBackward() { if (GetPluginWrapper() && CORE_NavigateBackward) CORE_NavigateBackward(); }
 void NavigateForward() { if (GetPluginWrapper() && CORE_NavigateForward) CORE_NavigateForward(); }

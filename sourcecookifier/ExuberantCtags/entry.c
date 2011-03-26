@@ -761,6 +761,11 @@ static int addExtensionFields (const tagEntryInfo *const tag)
 		length += fprintf (TagFile.fp, "%s\001signature:%s", sep,
 				tag->extensionFields.signature);
 
+	if (Option.extensionFields.returnType &&
+			tag->extensionFields.returnType != NULL)
+		length += fprintf (TagFile.fp, "%s\001returntype:%s", sep,
+				tag->extensionFields.returnType);
+	
 	return length;
 #undef sep
 }
@@ -772,6 +777,8 @@ static int writePatternEntry (const tagEntryInfo *const tag)
 	boolean newlineTerminated;
 	int length = 0;
 
+	if (line == NULL)
+		error (FATAL, "bad tag in %s", vStringValue (File.name));
 	if (tag->truncateLine)
 		truncateTagLine (line, tag->name, FALSE);
 	newlineTerminated = (boolean) (line [strlen (line) - 1] == '\n');

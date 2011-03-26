@@ -485,7 +485,7 @@ static void makeFortranTag (tokenInfo *const token, tagType tag)
 			const tokenInfo* const scope = ancestorScope ();
 			if (scope != NULL)
 			{
-				e.extensionFields.scope [0] = FortranKinds [scope->tag].name;
+				e.extensionFields.scope [0] = (const char*)&FortranKinds [scope->tag].letter;
 				e.extensionFields.scope [1] = vStringValue (scope->string);
 			}
 		}

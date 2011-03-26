@@ -10,6 +10,12 @@
         <Extensions>
           <string>.build.xml</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -65,6 +71,12 @@
           <string>.[68][68][kKsSxX]</string>
           <string>.[xX][68][68]</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -77,6 +89,7 @@
                 <RegexPatterns>
                   <string>/^[[:blank:]]*(\.const|\.code)\b/\1/S/ei</string>
                   <string>/^[[:blank:]]*(\.data[\?[:space:]]?[[:space:]])/\1/S/ei</string>
+                  <string>/^[[:blank:]]*section[[:blank:]'\"]+([^'\"]+)[[:blank:]'\"]+([^;]*)/\1&#x2;signature:\2/S/ei</string>
                 </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>
@@ -95,6 +108,7 @@
                 <BuildIn>false</BuildIn>
                 <RegexPatterns>
                   <string>/^[[:blank:]]*([[:alnum:]_]+)[[:blank:]]*\bproc\b[[:blank:]]*([[:alnum:]_:,[:space:]]*)/\1&#x2;signature:\2/P/ei</string>
+                  <string>/^[[:blank:]]*proc[[:blank:]]+([[:alnum:]_]+)[[:blank:]]*([[:alnum:]_:,[:space:]]*)/\1&#x2;signature:\2/P/e</string>
                 </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>
@@ -143,7 +157,9 @@
               <TagType>
                 <Description>[Struct]</Description>
                 <BuildIn>true</BuildIn>
-                <RegexPatterns />
+                <RegexPatterns>
+                  <string>/^[[:blank:]]*struct[[:blank:]]+([[:alnum:]_]+)/\1/t/e</string>
+                </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>
                 <IconFilename>asm_struct.png</IconFilename>
@@ -159,7 +175,9 @@
               <TagType>
                 <Description>[Macro]</Description>
                 <BuildIn>true</BuildIn>
-                <RegexPatterns />
+                <RegexPatterns>
+                  <string>/^[[:blank:]]*macro[[:blank:]]+([[:alnum:]_]+)/\1/m/e</string>
+                </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>
                 <IconFilename>asm_macro.png</IconFilename>
@@ -182,6 +200,12 @@
           <string>.asp</string>
           <string>.asa</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -279,6 +303,12 @@
           <string>.gawk</string>
           <string>.mawk</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -317,6 +347,12 @@
           <string>.cls</string>
           <string>.vb</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>false</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -428,6 +464,12 @@
         <Extensions>
           <string>.bet</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -507,6 +549,12 @@
         <Extensions>
           <string>.c</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>::</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -740,6 +788,12 @@
           <string>.hpp</string>
           <string>.hxx</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>::</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -979,6 +1033,12 @@
         <Extensions>
           <string>.cs</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1205,6 +1265,12 @@
           <string>.CBL</string>
           <string>.COB</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1317,6 +1383,12 @@
           <string>.bat</string>
           <string>.cmd</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1364,6 +1436,12 @@
         <Extensions>
           <string>.e</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1430,6 +1508,12 @@
           <string>.hrl</string>
           <string>.HRL</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>:</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1510,6 +1594,12 @@
           <string>.as</string>
           <string>.mxml</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1626,6 +1716,12 @@
           <string>.f90</string>
           <string>.f95</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1866,6 +1962,12 @@
           <string>.htm</string>
           <string>.html</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -1913,6 +2015,12 @@
         <Extensions>
           <string>.java</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2056,6 +2164,12 @@
         <Extensions>
           <string>.js</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2156,6 +2270,12 @@
           <string>.lisp</string>
           <string>.lsp</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2187,6 +2307,12 @@
         <Extensions>
           <string>.lua</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2221,6 +2347,12 @@
           <string>[Mm]akefile</string>
           <string>GNUmakefile</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2252,6 +2384,12 @@
         <Extensions>
           <string>.m</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2284,6 +2422,12 @@
           <string>.ml</string>
           <string>.mli</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2444,6 +2588,12 @@
           <string>.p</string>
           <string>.pas</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2494,6 +2644,12 @@
           <string>.plx</string>
           <string>.perl</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2607,6 +2763,12 @@
           <string>.php3</string>
           <string>.phtml</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -2713,7 +2875,7 @@
                 <Description>Class Methods</Description>
                 <BuildIn>false</BuildIn>
                 <RegexPatterns>
-                  <string>/(public\s|private\s|protected\s|)\s*(static\s)?\s*function\s+([A-Z_][A-Z_0-9]*)\s*\(/\1\2\3()/M/ei</string>
+                  <string>/(public\s|private\s|protected\s|)\s*(static\s)?\s*function\s+([A-Z_][A-Z_0-9]*)\s*(\(.*\))/\3&#x2;access:\1\2&#x2;signature:\4/M/ei</string>
                 </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>
@@ -2928,6 +3090,12 @@
           <string>Sconscript.</string>
           <string>Sconstruct.</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3021,24 +3189,86 @@
       <Language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <BuildIn>true</BuildIn>
         <Extensions>
-          <string>.cmd</string>
           <string>.rexx</string>
           <string>.rx</string>
+          <string>.rex</string>
+          <string>.rxj</string>
+          <string>.nrx</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
+          <item>
+            <key>
+              <string>c</string>
+            </key>
+            <value>
+              <TagType>
+                <Description>[Class]</Description>
+                <BuildIn>false</BuildIn>
+                <RegexPatterns>
+                  <string>/^::class[[:space:]+]([A-Za-z0-9@#$\\.!?_]+)*/\1/c/ei</string>
+                </RegexPatterns>
+                <Show>true</Show>
+                <TrackCaret>true</TrackCaret>
+                <IconFilename>php_classes.png</IconFilename>
+                <ForeColor>-16775595</ForeColor>
+              </TagType>
+            </value>
+          </item>
+          <item>
+            <key>
+              <string>m</string>
+            </key>
+            <value>
+              <TagType>
+                <Description>[Method]</Description>
+                <BuildIn>false</BuildIn>
+                <RegexPatterns>
+                  <string>/^::method[[:space:]+]([A-Za-z0-9@#$\\.!?_]+)*/\1/m/ei</string>
+                </RegexPatterns>
+                <Show>true</Show>
+                <TrackCaret>true</TrackCaret>
+                <IconFilename>php_class_methods.png</IconFilename>
+                <ForeColor>-8388608</ForeColor>
+              </TagType>
+            </value>
+          </item>
+          <item>
+            <key>
+              <string>r</string>
+            </key>
+            <value>
+              <TagType>
+                <Description>[Routine]</Description>
+                <BuildIn>false</BuildIn>
+                <RegexPatterns>
+                  <string>/^::routine[[:space:]+]([A-Za-z0-9@#$\\.!?_]+)*/\1/r/ei</string>
+                </RegexPatterns>
+                <Show>true</Show>
+                <TrackCaret>true</TrackCaret>
+                <IconFilename>php_class_constants.png</IconFilename>
+                <ForeColor>-16760832</ForeColor>
+              </TagType>
+            </value>
+          </item>
           <item>
             <key>
               <string>s</string>
             </key>
             <value>
               <TagType>
-                <Description>subroutines</Description>
+                <Description>[Subroutine]</Description>
                 <BuildIn>true</BuildIn>
                 <RegexPatterns />
                 <Show>true</Show>
-                <TrackCaret>false</TrackCaret>
-                <IconFilename />
-                <ForeColor>0</ForeColor>
+                <TrackCaret>true</TrackCaret>
+                <IconFilename>ini_section.png</IconFilename>
+                <ForeColor>-11910912</ForeColor>
               </TagType>
             </value>
           </item>
@@ -3057,6 +3287,12 @@
           <string>.rb</string>
           <string>.ruby</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3141,6 +3377,12 @@
           <string>.scm</string>
           <string>.sm</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3193,6 +3435,12 @@
           <string>.ksh</string>
           <string>.zsh</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3224,6 +3472,12 @@
         <Extensions>
           <string>.sl</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3272,6 +3526,12 @@
           <string>.sml</string>
           <string>.sig</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3399,6 +3659,12 @@
         <Extensions>
           <string>.sql</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>false</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3769,6 +4035,12 @@
           <string>.wish</string>
           <string>.itcl</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3832,6 +4104,12 @@
         <Extensions>
           <string>.tex</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -3961,6 +4239,12 @@
           <string>.vri</string>
           <string>.vrh</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4184,6 +4468,12 @@
         <Extensions>
           <string>.v</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4328,6 +4618,12 @@
           <string>.vhdl</string>
           <string>.vhd</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4519,6 +4815,12 @@
         <Extensions>
           <string>.vim</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4614,6 +4916,12 @@
         <Extensions>
           <string>.y</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4645,6 +4953,12 @@
         <Extensions>
           <string>.rc</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4875,7 +5189,14 @@
         <BuildIn>false</BuildIn>
         <Extensions>
           <string>.ini</string>
+          <string>.reg</string>
         </Extensions>
+        <DisplayAccess>false</DisplayAccess>
+        <DisplayReturnType>false</DisplayReturnType>
+        <DisplayScope>false</DisplayScope>
+        <DisplaySignature>false</DisplaySignature>
+        <CaseSensitive>true</CaseSensitive>
+        <ScopeOperator>.</ScopeOperator>
         <TagTypes>
           <item>
             <key>
@@ -4886,7 +5207,7 @@
                 <Description>[Section]</Description>
                 <BuildIn>false</BuildIn>
                 <RegexPatterns>
-                  <string>/^[[:blank:]]*\[([[:alnum:][:space:]_]+)\]/\1/s/e</string>
+                  <string>/^[[:blank:]]*\[(.+)\][[:blank:]]*$/\1/s/e</string>
                 </RegexPatterns>
                 <Show>true</Show>
                 <TrackCaret>true</TrackCaret>

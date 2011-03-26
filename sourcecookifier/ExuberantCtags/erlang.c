@@ -86,7 +86,7 @@ static void makeMemberTag (
 
 		if (module != NULL  &&  vStringLength (module) > 0)
 		{
-			tag.extensionFields.scope [0] = "module";
+			tag.extensionFields.scope [0] = "m";
 			tag.extensionFields.scope [1] = vStringValue (module);
 		}
 		makeTagEntry (&tag);

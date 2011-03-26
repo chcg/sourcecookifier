@@ -1,0 +1,4 @@
+-session scoped hierarchical class view
+-update help
+-auto restore damaged settings files
+-fix move-mouse-from-toolbar-overflow-menu-back-to-toolbar-blocks-global-shortcuts bug

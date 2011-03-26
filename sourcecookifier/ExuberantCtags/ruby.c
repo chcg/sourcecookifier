@@ -140,7 +140,7 @@ static void emitRubyTag (vString* name, rubyKind kind)
 
 	initTagEntry (&tag, vStringValue (name));
 	if (vStringLength (scope) > 0) {
-	    tag.extensionFields.scope [0] = "class";
+	    tag.extensionFields.scope [0] = "c";
 	    tag.extensionFields.scope [1] = vStringValue (scope);
 	}
 	tag.kindName = RubyKinds [kind].name;

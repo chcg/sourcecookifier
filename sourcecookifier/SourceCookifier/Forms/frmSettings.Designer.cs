@@ -46,6 +46,14 @@
 			this.btnExtensionDel = new System.Windows.Forms.Button();
 			this.btnExtensionAdd = new System.Windows.Forms.Button();
 			this.lbxExtensions = new System.Windows.Forms.ListBox();
+			this.cbxDisplayReturnType = new System.Windows.Forms.CheckBox();
+			this.lblDisplayReturnType = new System.Windows.Forms.Label();
+			this.cbxDisplayScope = new System.Windows.Forms.CheckBox();
+			this.lblDisplayScope = new System.Windows.Forms.Label();
+			this.cbxDisplaySignature = new System.Windows.Forms.CheckBox();
+			this.lblDisplaySignature = new System.Windows.Forms.Label();
+			this.cbxDisplayAccess = new System.Windows.Forms.CheckBox();
+			this.lblDisplayAccess = new System.Windows.Forms.Label();
 			this.lblDescription = new System.Windows.Forms.Label();
 			this.tbxDescription = new System.Windows.Forms.TextBox();
 			this.cbxShow = new System.Windows.Forms.CheckBox();
@@ -71,12 +79,20 @@
 			this.tbxRegexOutput = new System.Windows.Forms.TextBox();
 			this.lbxRegex = new System.Windows.Forms.ListBox();
 			this.btnTry = new System.Windows.Forms.Button();
+			this.gbxDisplay = new System.Windows.Forms.GroupBox();
+			this.gbxSemantics = new System.Windows.Forms.GroupBox();
+			this.tbxSemanticsScopeOperator = new System.Windows.Forms.TextBox();
+			this.lblSemanticsScopeOperator = new System.Windows.Forms.Label();
+			this.cbxSemanticsCaseSensitive = new System.Windows.Forms.CheckBox();
+			this.lblSemanticsCaseSensitive = new System.Windows.Forms.Label();
 			this.gbxLanguage.SuspendLayout();
 			this.gbxTagType.SuspendLayout();
 			this.gbxExtension.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pbxIcon)).BeginInit();
 			this.gbxAppearance.SuspendLayout();
 			this.gbxRegex.SuspendLayout();
+			this.gbxDisplay.SuspendLayout();
+			this.gbxSemantics.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnOK
@@ -164,7 +180,7 @@
 			// 
 			this.cbxTagTypeAdd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbxTagTypeAdd.FormattingEnabled = true;
-			this.cbxTagTypeAdd.Location = new System.Drawing.Point(6, 343);
+			this.cbxTagTypeAdd.Location = new System.Drawing.Point(7, 342);
 			this.cbxTagTypeAdd.Name = "cbxTagTypeAdd";
 			this.cbxTagTypeAdd.Size = new System.Drawing.Size(49, 21);
 			this.cbxTagTypeAdd.Sorted = true;
@@ -234,14 +250,15 @@
 			this.gbxExtension.Enabled = false;
 			this.gbxExtension.Location = new System.Drawing.Point(156, 12);
 			this.gbxExtension.Name = "gbxExtension";
-			this.gbxExtension.Size = new System.Drawing.Size(138, 370);
+			this.gbxExtension.Size = new System.Drawing.Size(138, 175);
 			this.gbxExtension.TabIndex = 4;
 			this.gbxExtension.TabStop = false;
 			this.gbxExtension.Text = "Extension";
 			// 
 			// tbxNewExtension
 			// 
-			this.tbxNewExtension.Location = new System.Drawing.Point(6, 343);
+			this.tbxNewExtension.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.tbxNewExtension.Location = new System.Drawing.Point(6, 147);
 			this.tbxNewExtension.Name = "tbxNewExtension";
 			this.tbxNewExtension.Size = new System.Drawing.Size(126, 20);
 			this.tbxNewExtension.TabIndex = 17;
@@ -249,8 +266,9 @@
 			// 
 			// btnExtensionDel
 			// 
+			this.btnExtensionDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnExtensionDel.Enabled = false;
-			this.btnExtensionDel.Location = new System.Drawing.Point(72, 314);
+			this.btnExtensionDel.Location = new System.Drawing.Point(72, 118);
 			this.btnExtensionDel.Name = "btnExtensionDel";
 			this.btnExtensionDel.Size = new System.Drawing.Size(60, 23);
 			this.btnExtensionDel.TabIndex = 20;
@@ -260,8 +278,9 @@
 			// 
 			// btnExtensionAdd
 			// 
+			this.btnExtensionAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnExtensionAdd.Enabled = false;
-			this.btnExtensionAdd.Location = new System.Drawing.Point(6, 314);
+			this.btnExtensionAdd.Location = new System.Drawing.Point(6, 118);
 			this.btnExtensionAdd.Name = "btnExtensionAdd";
 			this.btnExtensionAdd.Size = new System.Drawing.Size(60, 23);
 			this.btnExtensionAdd.TabIndex = 19;
@@ -276,9 +295,80 @@
 			this.lbxExtensions.FormattingEnabled = true;
 			this.lbxExtensions.Location = new System.Drawing.Point(6, 19);
 			this.lbxExtensions.Name = "lbxExtensions";
-			this.lbxExtensions.Size = new System.Drawing.Size(126, 290);
+			this.lbxExtensions.Size = new System.Drawing.Size(126, 95);
 			this.lbxExtensions.TabIndex = 2;
 			this.lbxExtensions.SelectedIndexChanged += new System.EventHandler(this.LbxExtensionsSelectedIndexChanged);
+			// 
+			// cbxDisplayReturnType
+			// 
+			this.cbxDisplayReturnType.Location = new System.Drawing.Point(117, 39);
+			this.cbxDisplayReturnType.Name = "cbxDisplayReturnType";
+			this.cbxDisplayReturnType.Size = new System.Drawing.Size(15, 24);
+			this.cbxDisplayReturnType.TabIndex = 28;
+			this.cbxDisplayReturnType.UseVisualStyleBackColor = true;
+			// 
+			// lblDisplayReturnType
+			// 
+			this.lblDisplayReturnType.AutoSize = true;
+			this.lblDisplayReturnType.Location = new System.Drawing.Point(6, 45);
+			this.lblDisplayReturnType.Name = "lblDisplayReturnType";
+			this.lblDisplayReturnType.Size = new System.Drawing.Size(62, 13);
+			this.lblDisplayReturnType.TabIndex = 27;
+			this.lblDisplayReturnType.Text = "Return type";
+			// 
+			// cbxDisplayScope
+			// 
+			this.cbxDisplayScope.Location = new System.Drawing.Point(117, 61);
+			this.cbxDisplayScope.Name = "cbxDisplayScope";
+			this.cbxDisplayScope.Size = new System.Drawing.Size(15, 24);
+			this.cbxDisplayScope.TabIndex = 26;
+			this.cbxDisplayScope.UseVisualStyleBackColor = true;
+			this.cbxDisplayScope.CheckedChanged += new System.EventHandler(this.DisplayExtendedChanged);
+			// 
+			// lblDisplayScope
+			// 
+			this.lblDisplayScope.AutoSize = true;
+			this.lblDisplayScope.Location = new System.Drawing.Point(6, 66);
+			this.lblDisplayScope.Name = "lblDisplayScope";
+			this.lblDisplayScope.Size = new System.Drawing.Size(38, 13);
+			this.lblDisplayScope.TabIndex = 25;
+			this.lblDisplayScope.Text = "Scope";
+			// 
+			// cbxDisplaySignature
+			// 
+			this.cbxDisplaySignature.Location = new System.Drawing.Point(117, 83);
+			this.cbxDisplaySignature.Name = "cbxDisplaySignature";
+			this.cbxDisplaySignature.Size = new System.Drawing.Size(15, 24);
+			this.cbxDisplaySignature.TabIndex = 24;
+			this.cbxDisplaySignature.UseVisualStyleBackColor = true;
+			this.cbxDisplaySignature.CheckedChanged += new System.EventHandler(this.DisplayExtendedChanged);
+			// 
+			// lblDisplaySignature
+			// 
+			this.lblDisplaySignature.AutoSize = true;
+			this.lblDisplaySignature.Location = new System.Drawing.Point(6, 88);
+			this.lblDisplaySignature.Name = "lblDisplaySignature";
+			this.lblDisplaySignature.Size = new System.Drawing.Size(52, 13);
+			this.lblDisplaySignature.TabIndex = 23;
+			this.lblDisplaySignature.Text = "Signature";
+			// 
+			// cbxDisplayAccess
+			// 
+			this.cbxDisplayAccess.Location = new System.Drawing.Point(117, 17);
+			this.cbxDisplayAccess.Name = "cbxDisplayAccess";
+			this.cbxDisplayAccess.Size = new System.Drawing.Size(15, 24);
+			this.cbxDisplayAccess.TabIndex = 22;
+			this.cbxDisplayAccess.UseVisualStyleBackColor = true;
+			this.cbxDisplayAccess.CheckedChanged += new System.EventHandler(this.DisplayExtendedChanged);
+			// 
+			// lblDisplayAccess
+			// 
+			this.lblDisplayAccess.AutoSize = true;
+			this.lblDisplayAccess.Location = new System.Drawing.Point(6, 22);
+			this.lblDisplayAccess.Name = "lblDisplayAccess";
+			this.lblDisplayAccess.Size = new System.Drawing.Size(42, 13);
+			this.lblDisplayAccess.TabIndex = 21;
+			this.lblDisplayAccess.Text = "Access";
 			// 
 			// lblDescription
 			// 
@@ -533,11 +623,82 @@
 			this.btnTry.UseVisualStyleBackColor = true;
 			this.btnTry.Click += new System.EventHandler(this.BtnTryClick);
 			// 
+			// gbxDisplay
+			// 
+			this.gbxDisplay.Controls.Add(this.cbxDisplayReturnType);
+			this.gbxDisplay.Controls.Add(this.lblDisplayAccess);
+			this.gbxDisplay.Controls.Add(this.lblDisplayReturnType);
+			this.gbxDisplay.Controls.Add(this.cbxDisplayAccess);
+			this.gbxDisplay.Controls.Add(this.cbxDisplayScope);
+			this.gbxDisplay.Controls.Add(this.lblDisplaySignature);
+			this.gbxDisplay.Controls.Add(this.lblDisplayScope);
+			this.gbxDisplay.Controls.Add(this.cbxDisplaySignature);
+			this.gbxDisplay.Enabled = false;
+			this.gbxDisplay.Location = new System.Drawing.Point(156, 272);
+			this.gbxDisplay.Name = "gbxDisplay";
+			this.gbxDisplay.Size = new System.Drawing.Size(138, 111);
+			this.gbxDisplay.TabIndex = 29;
+			this.gbxDisplay.TabStop = false;
+			this.gbxDisplay.Text = "Display";
+			// 
+			// gbxSemantics
+			// 
+			this.gbxSemantics.Controls.Add(this.tbxSemanticsScopeOperator);
+			this.gbxSemantics.Controls.Add(this.lblSemanticsScopeOperator);
+			this.gbxSemantics.Controls.Add(this.cbxSemanticsCaseSensitive);
+			this.gbxSemantics.Controls.Add(this.lblSemanticsCaseSensitive);
+			this.gbxSemantics.Enabled = false;
+			this.gbxSemantics.Location = new System.Drawing.Point(156, 193);
+			this.gbxSemantics.Name = "gbxSemantics";
+			this.gbxSemantics.Size = new System.Drawing.Size(138, 73);
+			this.gbxSemantics.TabIndex = 30;
+			this.gbxSemantics.TabStop = false;
+			this.gbxSemantics.Text = "Semantics";
+			// 
+			// tbxSemanticsScopeOperator
+			// 
+			this.tbxSemanticsScopeOperator.Location = new System.Drawing.Point(108, 43);
+			this.tbxSemanticsScopeOperator.MaxLength = 2;
+			this.tbxSemanticsScopeOperator.Name = "tbxSemanticsScopeOperator";
+			this.tbxSemanticsScopeOperator.Size = new System.Drawing.Size(22, 20);
+			this.tbxSemanticsScopeOperator.TabIndex = 25;
+			this.tbxSemanticsScopeOperator.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbxSemanticsScopeOperator.TextChanged += new System.EventHandler(this.SemanticsChanged);
+			// 
+			// lblSemanticsScopeOperator
+			// 
+			this.lblSemanticsScopeOperator.AutoSize = true;
+			this.lblSemanticsScopeOperator.Location = new System.Drawing.Point(6, 47);
+			this.lblSemanticsScopeOperator.Name = "lblSemanticsScopeOperator";
+			this.lblSemanticsScopeOperator.Size = new System.Drawing.Size(80, 13);
+			this.lblSemanticsScopeOperator.TabIndex = 24;
+			this.lblSemanticsScopeOperator.Text = "Scope operator";
+			// 
+			// cbxSemanticsCaseSensitive
+			// 
+			this.cbxSemanticsCaseSensitive.Location = new System.Drawing.Point(117, 17);
+			this.cbxSemanticsCaseSensitive.Name = "cbxSemanticsCaseSensitive";
+			this.cbxSemanticsCaseSensitive.Size = new System.Drawing.Size(15, 24);
+			this.cbxSemanticsCaseSensitive.TabIndex = 23;
+			this.cbxSemanticsCaseSensitive.UseVisualStyleBackColor = true;
+			this.cbxSemanticsCaseSensitive.CheckedChanged += new System.EventHandler(this.SemanticsChanged);
+			// 
+			// lblSemanticsCaseSensitive
+			// 
+			this.lblSemanticsCaseSensitive.AutoSize = true;
+			this.lblSemanticsCaseSensitive.Location = new System.Drawing.Point(6, 23);
+			this.lblSemanticsCaseSensitive.Name = "lblSemanticsCaseSensitive";
+			this.lblSemanticsCaseSensitive.Size = new System.Drawing.Size(75, 13);
+			this.lblSemanticsCaseSensitive.TabIndex = 22;
+			this.lblSemanticsCaseSensitive.Text = "Case sensitive";
+			// 
 			// frmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(816, 395);
+			this.Controls.Add(this.gbxSemantics);
+			this.Controls.Add(this.gbxDisplay);
 			this.Controls.Add(this.btnTry);
 			this.Controls.Add(this.gbxRegex);
 			this.Controls.Add(this.gbxAppearance);
@@ -552,6 +713,7 @@
 			this.Name = "frmSettings";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Language settings";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSettingsFormClosing);
 			this.gbxLanguage.ResumeLayout(false);
 			this.gbxLanguage.PerformLayout();
 			this.gbxTagType.ResumeLayout(false);
@@ -562,8 +724,26 @@
 			this.gbxAppearance.PerformLayout();
 			this.gbxRegex.ResumeLayout(false);
 			this.gbxRegex.PerformLayout();
+			this.gbxDisplay.ResumeLayout(false);
+			this.gbxDisplay.PerformLayout();
+			this.gbxSemantics.ResumeLayout(false);
+			this.gbxSemantics.PerformLayout();
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.Label lblSemanticsScopeOperator;
+		private System.Windows.Forms.TextBox tbxSemanticsScopeOperator;
+		private System.Windows.Forms.Label lblSemanticsCaseSensitive;
+		private System.Windows.Forms.CheckBox cbxSemanticsCaseSensitive;
+		private System.Windows.Forms.GroupBox gbxSemantics;
+		private System.Windows.Forms.GroupBox gbxDisplay;
+		private System.Windows.Forms.Label lblDisplayReturnType;
+		private System.Windows.Forms.CheckBox cbxDisplayReturnType;
+		private System.Windows.Forms.Label lblDisplayAccess;
+		private System.Windows.Forms.CheckBox cbxDisplayAccess;
+		private System.Windows.Forms.Label lblDisplaySignature;
+		private System.Windows.Forms.CheckBox cbxDisplaySignature;
+		private System.Windows.Forms.Label lblDisplayScope;
+		private System.Windows.Forms.CheckBox cbxDisplayScope;
 		private System.Windows.Forms.TextBox tbxRegexOutput;
 		private System.Windows.Forms.CheckBox cbxRegexCaseSensitive;
 		private System.Windows.Forms.Label lblRegexOutput;

@@ -1,18 +1,22 @@
 #include <windows.h>
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
+#include <fstream>
+#include <string>
 #include "resource.h"
 #include "NppIncludes\PluginInterface.h"
 
 // Don't enable following functionality, since it won't work with your Notepad++ anyway.
 // I'm using a modded N++ version, because it didn't expose a function for plug-ins, which
 // searches a given list of files for a text string...
-//#define FIND_IN_SESSION
+// #define FIND_IN_SESSION
 
 HMODULE hMod = NULL;
 
 TCHAR szPluginPath[MAX_PATH];
 TCHAR szPluginName[MAX_PATH];
+TCHAR szPluginConfig[MAX_PATH];
+TCHAR szBuffer[MAX_PATH];
 
 NppData nppData;
 #ifdef FIND_IN_SESSION
@@ -29,6 +33,11 @@ FuncItem * funcItemCore = NULL;
 
 BOOL pluginWrapperLoaded = FALSE;
 BOOL GetPluginWrapper(BOOL showError);
+
+void LoadConfigs();
+BOOL ShowAtStartup = FALSE;
+BOOL HideAtStartup = FALSE;
+BOOL FormShown = FALSE;
 
 void (__cdecl * W_Init)() = NULL;
 void (__cdecl * W_setInfo)(NppData) = NULL;

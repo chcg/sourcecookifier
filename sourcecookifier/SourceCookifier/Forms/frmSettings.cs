@@ -13,7 +13,7 @@ namespace NppPluginNET
 		public SerializableDictionary<string, Language> tempLanguages;
 		public SerializableDictionary<string, Language> oldLanguages;
 		public bool Changed = false;
-		public bool ExtensionChanged = false;
+		public bool ChangedEx = false;
 		public bool Tried = false;
 		public frmSettings(PluginBase pb)
 		{
@@ -22,7 +22,7 @@ namespace NppPluginNET
 			Icon = Properties.Resources.cookie_monster;
 			try
 			{
-    			oldLanguages = Settings.Languages;
+				oldLanguages = Settings.Languages;
 				tempLanguages = new SerializableDictionary<string, Language>();
 				foreach (string oldLanguage in Settings.Languages.Keys)
 				{
@@ -30,6 +30,12 @@ namespace NppPluginNET
 					newLanguage.BuildIn = Settings.Languages[oldLanguage].BuildIn;
 					foreach (string ext in Settings.Languages[oldLanguage].Extensions)
 						newLanguage.Extensions.Add(ext);
+					newLanguage.CaseSensitive = Settings.Languages[oldLanguage].CaseSensitive;
+					newLanguage.ScopeOperator = Settings.Languages[oldLanguage].ScopeOperator;
+					newLanguage.DisplayAccess = Settings.Languages[oldLanguage].DisplayAccess;
+					newLanguage.DisplayReturnType = Settings.Languages[oldLanguage].DisplayReturnType;
+					newLanguage.DisplayScope = Settings.Languages[oldLanguage].DisplayScope;
+					newLanguage.DisplaySignature = Settings.Languages[oldLanguage].DisplaySignature;
 					foreach (string identifier in Settings.Languages[oldLanguage].TagTypes.Keys)
 					{
 						TagType tagtype = new TagType();
@@ -50,8 +56,29 @@ namespace NppPluginNET
 					else
 						lbxLanguages.Items.Add(oldLanguage + "*");
 				}
+				
+                if (Settings.lstLangSetDlgSelections.Count == 0)
+                {
+                    Settings.lstLangSetDlgSelections.Add(-1);
+                    Settings.lstLangSetDlgSelections.Add(-1);
+                    Settings.lstLangSetDlgSelections.Add(-1);
+                    Settings.lstLangSetDlgSelections.Add(-1);
+                }
+                
+				lbxLanguages.SelectedIndex = Settings.lstLangSetDlgSelections[0];
+				lbxExtensions.SelectedIndex = Settings.lstLangSetDlgSelections[1];
+				lbxTagTypes.SelectedIndex = Settings.lstLangSetDlgSelections[2];
+				lbxRegex.SelectedIndex = Settings.lstLangSetDlgSelections[3];
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
+		}
+		
+		void FrmSettingsFormClosing(object sender, FormClosingEventArgs e)
+		{
+			Settings.lstLangSetDlgSelections[0] = lbxLanguages.SelectedIndex;
+			Settings.lstLangSetDlgSelections[1] = lbxExtensions.SelectedIndex;
+			Settings.lstLangSetDlgSelections[2] = lbxTagTypes.SelectedIndex;
+			Settings.lstLangSetDlgSelections[3] = lbxRegex.SelectedIndex;
 		}
 		
 		#region " Language "
@@ -79,7 +106,17 @@ namespace NppPluginNET
 						lbxExtensions.Items.Add(ext);
 					}
 					gbxExtension.Enabled = true;
+					
+					gbxSemantics.Enabled = true;
+					cbxSemanticsCaseSensitive.Checked = tempLanguages[name].CaseSensitive;
+					tbxSemanticsScopeOperator.Text = tempLanguages[name].ScopeOperator;
 
+					gbxDisplay.Enabled = true;
+					cbxDisplayAccess.Checked = tempLanguages[name].DisplayAccess;
+					cbxDisplayReturnType.Checked = tempLanguages[name].DisplayReturnType;
+					cbxDisplayScope.Checked = tempLanguages[name].DisplayScope;
+					cbxDisplaySignature.Checked = tempLanguages[name].DisplaySignature;
+					
 					foreach (string identifier in tempLanguages[name].TagTypes.Keys)
 					{
 						if (tempLanguages[name].TagTypes[identifier].BuildIn)
@@ -123,7 +160,7 @@ namespace NppPluginNET
 				int index = lbxLanguages.Items.Add(name + "*");
 				lbxLanguages.SelectedIndex = index;
 				Changed = true;
-				ExtensionChanged = true;
+				ChangedEx = true;
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
 		}
@@ -135,7 +172,7 @@ namespace NppPluginNET
 				tempLanguages.Remove(name.Substring(0, name.Length - 1));
 				lbxLanguages.Items.Remove(name);
 				Changed = true;
-				ExtensionChanged = true;
+				ChangedEx = true;
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
 		}
@@ -145,13 +182,15 @@ namespace NppPluginNET
 		}
 		#endregion
 		
-		#region " Extension "
+		#region " Extension, Semantics, Display "
 		void ResetExtensionGroup()
 		{
 			gbxExtension.Enabled = false;
 			lbxExtensions.Items.Clear();
 			btnExtensionDel.Enabled = false;
 			tbxNewExtension.Clear();
+			gbxSemantics.Enabled = false;
+			gbxDisplay.Enabled = false;
 		}
 		void LbxExtensionsSelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -194,7 +233,7 @@ namespace NppPluginNET
 					tempLanguages[name].Extensions.Add(newExtension);
 					lbxExtensions.Items.Add(newExtension);
 					Changed = true;
-					ExtensionChanged = true;
+					ChangedEx = true;
 				}
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
@@ -209,7 +248,46 @@ namespace NppPluginNET
 				tempLanguages[name].Extensions.Remove(selExt);
 				lbxExtensions.Items.Remove(selExt);
 				Changed = true;
-				ExtensionChanged = true;
+				ChangedEx = true;
+			}
+			catch (Exception ex) { pluginBase.ErrorOut(ex); }
+		}
+		void SemanticsChanged(object sender, EventArgs e)
+		{
+			try
+			{
+				string name = (string)lbxLanguages.SelectedItem;
+				if (name.EndsWith("*"))
+					name = name.Substring(0, name.Length - 1);
+				if (sender == cbxSemanticsCaseSensitive)
+				{
+					tempLanguages[name].CaseSensitive = cbxSemanticsCaseSensitive.Checked;
+				}
+				else if (sender == tbxSemanticsScopeOperator)
+				{
+					tempLanguages[name].ScopeOperator = tbxSemanticsScopeOperator.Text;
+					ChangedEx = true;
+				}
+				Changed = true;
+			}
+			catch (Exception ex) { pluginBase.ErrorOut(ex); }
+		}
+		void DisplayExtendedChanged(object sender, EventArgs e)
+		{
+			try
+			{
+				string name = (string)lbxLanguages.SelectedItem;
+				if (name.EndsWith("*"))
+					name = name.Substring(0, name.Length - 1);
+				if (sender == cbxDisplayAccess)
+					tempLanguages[name].DisplayAccess = cbxDisplayAccess.Checked;
+				else if (sender == cbxDisplayReturnType)
+					tempLanguages[name].DisplayReturnType = cbxDisplayReturnType.Checked;
+				else if (sender == cbxDisplayScope)
+					tempLanguages[name].DisplayScope = cbxDisplayScope.Checked;
+				else if (sender == cbxDisplaySignature)
+					tempLanguages[name].DisplaySignature = cbxDisplaySignature.Checked;
+				Changed = true;
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
 		}
@@ -288,6 +366,8 @@ namespace NppPluginNET
 					tbxIcon.ForeColor = foreColor;
 					btnForeColor.ForeColor = foreColor;
 					btnAcceptChanges.Enabled = false; // =\
+					btnAcceptChanges.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+					btnAcceptChanges.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 					
 					gbxRegex.Enabled = true;
 					foreach (string regex in tempLanguages[name].TagTypes[identifier].RegexPatterns)
@@ -403,10 +483,14 @@ namespace NppPluginNET
 			tbxIcon.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 			btnForeColor.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 			btnAcceptChanges.Enabled = false;
+			btnAcceptChanges.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+			btnAcceptChanges.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 		}
 		void TagTypeAppearanceChanged(object sender, EventArgs e)
 		{
 			btnAcceptChanges.Enabled = true;
+			btnAcceptChanges.BackColor = Color.Red;
+			btnAcceptChanges.ForeColor = Color.White;
 		}
 		void BtnIconClick(object sender, EventArgs e)
 		{
@@ -416,15 +500,15 @@ namespace NppPluginNET
 				ofd.Filter = "Image file (*.*)|*.*";
 				ofd.Title = "Load image file";
 				ofd.InitialDirectory = Settings.iconFolder;
-	            if (ofd.ShowDialog() == DialogResult.OK)
-	            {
-	            	try
-	            	{
-	            		pbxIcon.Image = new Bitmap(ofd.FileName);
-	            		tbxIcon.Text = Path.GetFileName(ofd.FileName);
-	            	}
-	            	catch (Exception ex) { pluginBase.ErrorOut(ex); }
-	            }
+				if (ofd.ShowDialog() == DialogResult.OK)
+				{
+					try
+					{
+						pbxIcon.Image = new Bitmap(ofd.FileName);
+						tbxIcon.Text = Path.GetFileName(ofd.FileName);
+					}
+					catch (Exception ex) { pluginBase.ErrorOut(ex); }
+				}
 			}
 		}
 		void BtnForeColorClick(object sender, EventArgs e)
@@ -446,6 +530,8 @@ namespace NppPluginNET
 						tbxIcon.ForeColor = cd.Color;
 						btnForeColor.ForeColor = cd.Color;
 						btnAcceptChanges.Enabled = true;
+						btnAcceptChanges.BackColor = Color.Red;
+						btnAcceptChanges.ForeColor = Color.White;
 					}
 				}
 			}
@@ -465,6 +551,8 @@ namespace NppPluginNET
 				tempLanguages[name].TagTypes[identifier].IconFilename = tbxIcon.Text;
 				tempLanguages[name].TagTypes[identifier].ForeColor = btnForeColor.ForeColor.ToArgb();
 				btnAcceptChanges.Enabled = false;
+				btnAcceptChanges.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+				btnAcceptChanges.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 				Changed = true;
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
@@ -501,6 +589,8 @@ namespace NppPluginNET
 			btnRegexAdd.Enabled = false;
 			btnRegexDel.Enabled = false;
 			btnRegexChange.Enabled = false;
+			btnRegexChange.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+			btnRegexChange.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 		}
 		void LbxRegexSelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -526,6 +616,8 @@ namespace NppPluginNET
 					btnRegexDel.Enabled = false;
 				}
 				btnRegexChange.Enabled = false;
+				btnRegexChange.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+				btnRegexChange.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
 		}
@@ -575,11 +667,33 @@ namespace NppPluginNET
 		void TbxRegexTextChanged(object sender, EventArgs e)
 		{
 			btnRegexAdd.Enabled = ((tbxRegexInput.Text.Trim() != "") && (tbxRegexOutput.Text.Trim() != ""));
-			btnRegexChange.Enabled = (lbxRegex.SelectedItem != null);
+			if (lbxRegex.SelectedItem != null)
+			{
+				btnRegexChange.Enabled = true;
+				btnRegexChange.BackColor = Color.Red;
+				btnRegexChange.ForeColor = Color.White;
+			}
+			else
+			{
+				btnRegexChange.Enabled = false;
+				btnRegexChange.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+				btnRegexChange.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+			}
 		}
 		void CbxRegexCaseSensitiveCheckedChanged(object sender, EventArgs e)
 		{
-			btnRegexChange.Enabled = (lbxRegex.SelectedItem != null);
+			if (lbxRegex.SelectedItem != null)
+			{
+				btnRegexChange.Enabled = true;
+				btnRegexChange.BackColor = Color.Red;
+				btnRegexChange.ForeColor = Color.White;
+			}
+			else
+			{
+				btnRegexChange.Enabled = false;
+				btnRegexChange.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+				btnRegexChange.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+			}
 		}
 		void BtnRegexChangeClick(object sender, EventArgs e)
 		{
@@ -612,14 +726,14 @@ namespace NppPluginNET
 		{
 			try
 			{
-	    		if (Changed)
-	    		{
-	        		Settings.Languages = tempLanguages;
-	    			Settings.LoadTagTypeIcons(pluginBase.frmMain.tvTags);
-	    			if (!pluginBase.frmMain.Visible) pluginBase.ShowFrmMain();
-	    			pluginBase.frmMain.ResetTreeView(ExtensionChanged);
+				if (Changed)
+				{
+					Settings.Languages = tempLanguages;
+					Settings.LoadTagTypeIcons(pluginBase.frmMain.tvTags);
+					if (!pluginBase.frmMain.Visible) pluginBase.ShowFrmMain();
+					pluginBase.frmMain.ResetTreeView(ChangedEx);
 					Tried = true;
-	    		}
+				}
 			}
 			catch (Exception ex) { pluginBase.ErrorOut(ex); }
 		}

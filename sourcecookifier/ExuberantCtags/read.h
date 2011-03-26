@@ -1,5 +1,5 @@
 /*
-*   $Id: read.h 659 2008-04-20 23:27:48Z elliotth $
+*   $Id: read.h 769 2010-09-11 21:00:16Z dhiebert $
 *
 *   Copyright (c) 1998-2002, Darren Hiebert
 *
@@ -77,7 +77,6 @@ typedef struct sInputFile {
 	int         ungetch;       /* a single character that was ungotten */
 	boolean     eof;           /* have we reached the end of file? */
 	boolean     newLine;       /* will the next character begin a new line? */
-	langType    language;      /* language of input file */
 
 	/*  Contains data pertaining to the original source file in which the tag
 	 *  was defined. This may be different from the input file when #line

@@ -320,7 +320,7 @@ static void makeEiffelFeatureTag (tokenInfo *const token)
 		e.isFileScope = (boolean) (! token->isExported);
 		e.kindName    = EiffelKinds [EKIND_FEATURE].name;
 		e.kind        = EiffelKinds [EKIND_FEATURE].letter;
-		e.extensionFields.scope [0] = EiffelKinds [EKIND_CLASS].name;
+		e.extensionFields.scope [0] = (const char*)&EiffelKinds [EKIND_CLASS].letter;
 		e.extensionFields.scope [1] = vStringValue (token->className);
 
 		makeTagEntry (&e);
@@ -356,7 +356,7 @@ static void makeEiffelLocalTag (tokenInfo *const token)
 		vStringPut (scope, '.');
 		vStringCat (scope, token->featureName);
 
-		e.extensionFields.scope [0] = EiffelKinds [EKIND_FEATURE].name;
+		e.extensionFields.scope [0] = (const char*)&EiffelKinds [EKIND_FEATURE].letter;
 		e.extensionFields.scope [1] = vStringValue (scope);
 
 		makeTagEntry (&e);

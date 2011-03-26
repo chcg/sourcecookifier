@@ -17,7 +17,7 @@ namespace NppPluginNET
 {
 	class CTagsExe
 	{
-		static string cTagsVersion = "5.8.2.SC";
+		static string cTagsVersion = "5.8.4.SC";
 		static string cTagsExePath;
 		static string tagsFilePath;
 		static string stdOut;
@@ -26,9 +26,10 @@ namespace NppPluginNET
 		
 		public static void Init()
 		{
-			cTagsExePath = Settings.ApplicationDir + "ctags.exe";
-			tagsFilePath = Settings.ApplicationDir + "tags";
+			cTagsExePath = Path.Combine(Settings.ApplicationDir, "ctags.exe");
+			tagsFilePath = Path.Combine(Settings.ConfigDir, "SourceCookifier.tags");
 			stdOut = "";
+			PluginBase.TRACE("CTags.exe path = " + cTagsExePath);
 			if (!File.Exists(cTagsExePath)) throw new Exception("'ctags.exe' not found!");
 			if (!CheckCtagsVersion()) throw new Exception("'ctags.exe' version does not fit SourceCookifier version!");
 		}
@@ -36,7 +37,7 @@ namespace NppPluginNET
 		{
 			RunCTagsExe("--version", false);
 			PluginBase.TRACE(stdOut.Substring(0, stdOut.IndexOf('\n')));
-			return (stdOut.StartsWith(string.Format("Exuberant Ctags {0}", cTagsVersion)));
+			return (stdOut.Contains(string.Format("Exuberant Ctags {0}", cTagsVersion)));
 		}
 		public static void GetLangMaps()
 		{
@@ -89,12 +90,26 @@ namespace NppPluginNET
 		public static void DoTags(string sourcefile, string language, string extension)
 		{
 			PluginBase.TRACE("-START-");
+
+			if (!string.IsNullOrEmpty(Settings.Configs.FileSizeLimit))
+			{
+				bool bMB = Settings.Configs.FileSizeLimit.EndsWith("mb");
+				long iLimit = Convert.ToInt64(Settings.Configs.FileSizeLimit.Replace(bMB ? "mb" : "kb", ""));
+				long iFileSize = new FileInfo(sourcefile.Replace("\"", "")).Length / (bMB ? 1048576 : 1024);
+				string sFileSize = string.Format("{0}{1}", iFileSize, (bMB ? "mb" : "kb"));
+				if (iFileSize > iLimit)
+				{
+					throw new Exception(string.Format("Custom filesize limit [{0}] reached: {1}!",
+						Settings.Configs.FileSizeLimit, sFileSize));
+				}
+			}
+			
 			StringBuilder args = new StringBuilder();
 			StringBuilder typeFlags = new StringBuilder();
 			
+			args.AppendFormat("-f \"{0}\" ", tagsFilePath);
 			args.Append("--excmd=number ");
-			args.Append("--fields=aksS ");
-			args.Append((Settings.Configs.UseTagFile ? "" : "-f- "));
+			args.Append("--fields=aksST ");
 			args.Append("--sort=no ");
 			
 			if (!Settings.Languages[language].BuildIn)
@@ -115,39 +130,33 @@ namespace NppPluginNET
 			args.AppendFormat("--{0}-kinds={1} ", language, typeFlags.ToString());
 			args.Append(sourcefile);
 
-			RunCTagsExe(args.ToString(), Settings.Configs.UseTagFile);
+			RunCTagsExe(args.ToString(), true);
 			PluginBase.TRACE("-END-");
 		}
 		public static void MapTags(Source source)
 		{
 			PluginBase.TRACE("-START-");
-			using (StreamReader r = (Settings.Configs.UseTagFile ? 
-			                         new StreamReader(tagsFilePath, Encoding.GetEncoding(1252))
-			                         :
-			                         new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(stdOut)))))
+			using (StreamReader r = new StreamReader(tagsFilePath, Encoding.GetEncoding(1252)))
 			{
 				string line = null;
 				PluginBase.TRACE(string.Format("Language={0}", source.Language));
 				while ((line = r.ReadLine()) != null)
 				{
-					source.AddTag(new Tag(line));
+					source.AddTag(new Tag(line, source.Language, source.ScopeOperator));
 				}
 			}
 			PluginBase.TRACE("-END-");
 		}
-		public static void MapQuickTags(IncludeFile incFile, string language)
+		public static void MapQuickTags(IncludeFile incFile, string language, string scopeOperator)
 		{
 			PluginBase.TRACE("-START-");
-			using (StreamReader r = (Settings.Configs.UseTagFile ? 
-			                         new StreamReader(tagsFilePath, Encoding.GetEncoding(1252))
-			                         :
-			                         new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(stdOut)))))
+			using (StreamReader r = new StreamReader(tagsFilePath, Encoding.GetEncoding(1252)))
 			{
 				string line = null;
 				PluginBase.TRACE(string.Format("Language={0}", language));
 				while ((line = r.ReadLine()) != null)
 				{
-					incFile.QuickTags.Add(new QuickTag(line, language));
+					incFile.QuickTags.Add(new QuickTag(line, language, scopeOperator));
 				}
 			}
 			PluginBase.TRACE("-END-");
@@ -156,11 +165,11 @@ namespace NppPluginNET
 		static void RunCTagsExe(string args, bool usetagfile)
 		{
 			PluginBase.TRACE("-START-");
-		    
+			
 			Process p = new Process();
 			p.StartInfo.WorkingDirectory = Settings.ApplicationDir;
 			p.StartInfo.FileName = cTagsExePath;
-			p.StartInfo.Arguments = args;
+            p.StartInfo.Arguments = "--options=NONE " + args;
 			p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.UseShellExecute = false;

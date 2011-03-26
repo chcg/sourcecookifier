@@ -1,0 +1,3 @@
+This build is for debugging purposes only,
+and it will log into following file:
+"C:\SourceCookifier.TRACE.txt"

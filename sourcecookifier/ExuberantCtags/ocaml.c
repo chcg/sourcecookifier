@@ -72,6 +72,7 @@ typedef enum {
 	OcaKEYWORD_if,
 	OcaKEYWORD_in,
 	OcaKEYWORD_let,
+	OcaKEYWORD_value,
 	OcaKEYWORD_match,
 	OcaKEYWORD_method,
 	OcaKEYWORD_module,
@@ -145,7 +146,7 @@ static const ocaKeywordDesc OcamlKeywordTable[] = {
 	{ "try"       , OcaKEYWORD_try       }, 
 	{ "type"      , OcaKEYWORD_type      }, 
 	{ "val"       , OcaKEYWORD_val       }, 
-	{ "value"     , OcaKEYWORD_let       }, /* just to handle revised syntax */
+	{ "value"     , OcaKEYWORD_value     }, /* just to handle revised syntax */
 	{ "virtual"   , OcaKEYWORD_virtual   }, 
 	{ "while"     , OcaKEYWORD_while     }, 
 	{ "with"      , OcaKEYWORD_with      }, 
@@ -297,7 +298,6 @@ static void eatComment (lexingState * st)
 			if (st->cp == NULL)
 				return;
 			c = st->cp;
-			continue;
 		}
 		/* we've reached the end of the comment */
 		else if (*c == ')' && lastIsStar)
@@ -310,11 +310,13 @@ static void eatComment (lexingState * st)
 			eatComment (st);
 			c = st->cp;
 			lastIsStar = FALSE;
+            c++;
 		}
 		else
+        {
 			lastIsStar = '*' == *c;
-
-		c++;
+            c++;
+        }
 	}
 
 	st->cp = c;
@@ -866,11 +868,16 @@ static void prepareTag (tagEntryInfo * tag, vString const *name, ocamlKind kind)
 	tag->kindName = OcamlKinds[kind].name;
 	tag->kind = OcamlKinds[kind].letter;
 
+	if (kind == K_MODULE)
+	{
+		tag->lineNumberEntry = TRUE;
+		tag->lineNumber = 1;
+	}
 	parentIndex = getLastNamedIndex ();
 	if (parentIndex >= 0)
 	{
 		tag->extensionFields.scope[0] =
-			contextDescription (stack[parentIndex].type);
+			(const char*)&OcamlKinds[kind].letter;
 		tag->extensionFields.scope[1] =
 			vStringValue (stack[parentIndex].contextName);
 	}
@@ -880,9 +887,12 @@ static void prepareTag (tagEntryInfo * tag, vString const *name, ocamlKind kind)
  * more information to it in the future */
 static void addTag (vString * const ident, int kind)
 {
-	tagEntryInfo toCreate;
-	prepareTag (&toCreate, ident, kind);
-	makeTagEntry (&toCreate);
+	if (OcamlKinds [kind].enabled  &&  ident != NULL  &&  vStringLength (ident) > 0)
+	{
+		tagEntryInfo toCreate;
+		prepareTag (&toCreate, ident, kind);
+		makeTagEntry (&toCreate);
+	}
 }
 
 boolean needStrongPoping = FALSE;
@@ -942,15 +952,17 @@ static void typeRecord (vString * const ident, ocaToken what)
 }
 
 /* handle :
- * exception ExceptionName ... */
+ * exception ExceptionName of ... */
 static void exceptionDecl (vString * const ident, ocaToken what)
 {
 	if (what == OcaIDENTIFIER)
 	{
 		addTag (ident, K_EXCEPTION);
 	}
-	/* don't know what to do on else... */
-
+    else /* probably ill-formed, give back to global scope */
+    { 
+        globalScope (ident, what);
+    }
 	toDoNext = &globalScope;
 }
 
@@ -1006,7 +1018,6 @@ static void constructorValidation (vString * const ident, ocaToken what)
  */
 static void typeDecl (vString * const ident, ocaToken what)
 {
-
 	switch (what)
 	{
 		/* parameterized */
@@ -1046,7 +1057,6 @@ static void typeDecl (vString * const ident, ocaToken what)
  * let typeRecord handle it. */
 static void typeSpecification (vString * const ident, ocaToken what)
 {
-
 	switch (what)
 	{
 	case OcaIDENTIFIER:
@@ -1243,8 +1253,14 @@ static void localLet (vString * const ident, ocaToken what)
  * than the let definitions.
  * Used after a match ... with, or a function ... or fun ...
  * because their syntax is similar.  */
-static void matchPattern (vString * const UNUSED (ident), ocaToken what)
+static void matchPattern (vString * const ident, ocaToken what)
 {
+    /* keep track of [], as it
+     * can be used in patterns and can
+     * mean the end of match expression in
+     * revised syntax */
+    static int braceCount = 0;
+
 	switch (what)
 	{
 	case Tok_To:
@@ -1252,6 +1268,14 @@ static void matchPattern (vString * const UNUSED (ident), ocaToken what)
 		toDoNext = &mayRedeclare;
 		break;
 
+    case Tok_BRL:
+        braceCount++;
+        break;
+
+    case OcaKEYWORD_value:
+		popLastNamed ();
+        globalScope (ident, what);
+        break;
 
 	case OcaKEYWORD_in:
 		popLastNamed ();
@@ -1269,6 +1293,11 @@ static void mayRedeclare (vString * const ident, ocaToken what)
 {
 	switch (what)
 	{
+    case OcaKEYWORD_value:
+        // let globalScope handle it
+        globalScope (ident, what);
+        break;
+
 	case OcaKEYWORD_let:
 	case OcaKEYWORD_val:
 		toDoNext = localLet;
@@ -1388,6 +1417,7 @@ static void classSpecif (vString * const UNUSED (ident), ocaToken what)
  * nearly a copy/paste of globalLet. */
 static void methodDecl (vString * const ident, ocaToken what)
 {
+
 	switch (what)
 	{
 	case Tok_PARL:
@@ -1435,6 +1465,7 @@ vString *lastModule;
  */
 static void moduleSpecif (vString * const ident, ocaToken what)
 {
+
 	switch (what)
 	{
 	case OcaKEYWORD_functor:
@@ -1566,7 +1597,7 @@ static void globalScope (vString * const UNUSED (ident), ocaToken what)
 {
 	/* Do not touch, this is used only by the global scope
 	 * to handle an 'and' */
-	static parseNext previousParser = NULL;
+	static parseNext previousParser = &globalScope;
 
 	switch (what)
 	{
@@ -1608,6 +1639,7 @@ static void globalScope (vString * const UNUSED (ident), ocaToken what)
 		/* val is mixed with let as global
 		 * to be able to handle mli & new syntax */
 	case OcaKEYWORD_val:
+	case OcaKEYWORD_value:
 	case OcaKEYWORD_let:
 		cleanupPreviousParser ();
 		toDoNext = &globalLet;
@@ -1617,7 +1649,7 @@ static void globalScope (vString * const UNUSED (ident), ocaToken what)
 	case OcaKEYWORD_exception:
 		cleanupPreviousParser ();
 		toDoNext = &exceptionDecl;
-		previousParser = NULL;
+		previousParser = &globalScope;
 		break;
 
 		/* must be a #line directive, discard the
@@ -1769,7 +1801,7 @@ static void computeModuleName ( void )
 	if (isLowerAlpha (moduleName->buffer[0]))
 		moduleName->buffer[0] += ('A' - 'a');
 
-	makeSimpleTag (moduleName, OcamlKinds, K_MODULE);
+	addTag (moduleName, K_MODULE);
 	vStringDelete (moduleName);
 }
 

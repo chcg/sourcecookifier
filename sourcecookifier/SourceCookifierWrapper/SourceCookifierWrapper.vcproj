@@ -177,7 +177,7 @@
 		/>
 		<AssemblyReference
 			RelativePath="..\..\Notepad++\plugins\SourceCookifier\SourceCookifierCore.dll"
-			AssemblyName="SourceCookifierCore, Version=0.5.4.0, processorArchitecture=MSIL"
+			AssemblyName="SourceCookifierCore, Version=0.6.1.0, processorArchitecture=MSIL"
 			CopyLocal="false"
 		/>
 		<AssemblyReference

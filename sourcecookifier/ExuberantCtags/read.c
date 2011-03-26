@@ -1,5 +1,5 @@
 /*
-*   $Id: read.c 708 2009-07-04 05:29:02Z dhiebert $
+*   $Id: read.c 769 2010-09-11 21:00:16Z dhiebert $
 *
 *   Copyright (c) 1996-2002, Darren Hiebert
 *
@@ -271,7 +271,6 @@ extern boolean fileOpen (const char *const fileName, const langType language)
 		fgetpos (File.fp, &StartOfLine);
 		fgetpos (File.fp, &File.filePosition);
 		File.currentLine  = NULL;
-		File.language     = language;
 		File.lineNumber   = 0L;
 		File.eof          = FALSE;
 		File.newLine      = TRUE;
@@ -363,11 +362,23 @@ readnext:
 		 * and CR-LF (MS-DOS) are converted into a generic newline.
 		 */
 		const int next = getc (File.fp);  /* is CR followed by LF? */
-		if (next != NEWLINE)
-			ungetc (next, File.fp);
-    c = NEWLINE;  /* convert CR into newline */
-    File.newLine = TRUE;
-    fgetpos (File.fp, &StartOfLine);
+		if (next) /* is not UTF-16? */
+		{
+			if (next != NEWLINE)
+				ungetc (next, File.fp);
+		}
+		else /* is UTF-16 */
+		{
+			const int next_uc = getc (File.fp);
+			if (next_uc != NEWLINE)
+      {
+				ungetc (next_uc, File.fp);
+        ungetc (next, File.fp);
+      }
+		}
+		c = NEWLINE;  /* convert CR into newline */
+		File.newLine = TRUE;
+		fgetpos (File.fp, &StartOfLine);
 	}
 	DebugStatement ( debugPutc (DEBUG_RAW, c); )
 	return c;
