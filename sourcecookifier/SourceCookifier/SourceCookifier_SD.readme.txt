@@ -1,0 +1,2 @@
+In order to build with SharpDevelop you need to install
+the .NET plugin template for Notepad++ (v0.6 or higher).

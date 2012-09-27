@@ -13,6 +13,7 @@
 *   INCLUDE FILES
 */
 #include "general.h"  /* must always come first */
+#include "ctags.h"
 
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>  /* to declare malloc (), realloc () */
@@ -214,8 +215,12 @@ extern void error (
 	va_list ap;
 
 	va_start (ap, format);
-	fprintf (errout, "%s: %s", getExecutableName (),
-			selected (selection, WARNING) ? "Warning: " : "");
+	if (selected (selection, WARNING))
+		fprintf (errout, "%s: Warning: ", getExecutableName ());
+	else if (selected (selection, INFO))
+		fprintf (errout, "%s: SC-Info: ", getExecutableName ());
+	else
+		fprintf (errout, "%s: ", getExecutableName ());
 	vfprintf (errout, format, ap);
 	if (selected (selection, PERROR))
 #ifdef HAVE_STRERROR
@@ -886,6 +891,18 @@ extern FILE *tempFile (const char *const mode, char **const pName)
 	Assert (*pName == NULL);
 	*pName = name;
 	return fp;
+}
+
+extern void checkSourceCookifier ()
+{
+#if defined (WIN32)
+	const char *value = NULL;
+	value = getenv ("SourceCookifierVersion");
+	if ((value != NULL) && (strcmp (value, SOURCECOOKIFER_VERSION) == 0)) {
+		return; // everything ok then..
+  }
+#endif
+	error (FATAL, "This build of CTags only correctly works when called from SourceCookifier v%s!", SOURCECOOKIFER_VERSION);
 }
 
 /* vi:set tabstop=4 shiftwidth=4: */

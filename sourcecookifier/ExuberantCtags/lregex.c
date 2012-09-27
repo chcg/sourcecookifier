@@ -275,7 +275,7 @@ static void addCompiledTagPattern (
 	ptrn->pattern = pattern;
 	ptrn->type    = PTRN_TAG;
 	ptrn->u.tag.name_pattern = name;
-	ptrn->u.tag.kind.enabled = TRUE;
+	ptrn->u.tag.kind.enabled = FALSE;
 	ptrn->u.tag.kind.letter  = kind;
 	ptrn->u.tag.kind.name    = kindName;
 	ptrn->u.tag.kind.description = description;

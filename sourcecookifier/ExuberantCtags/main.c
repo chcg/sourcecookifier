@@ -482,6 +482,12 @@ static void makeTags (cookedArgs *args)
 			return;
 	}
 
+	numTagsWritten = 0;
+
+#ifndef DEBUG
+	checkSourceCookifier ();
+#endif
+
 #define timeStamp(n) timeStamps[(n)]=(Option.printTotals ? clock():(clock_t)0)
 	if (! Option.filter)
 		openTagFile ();
@@ -505,6 +511,8 @@ static void makeTags (cookedArgs *args)
 	}
 	if (! files  &&  Option.recurse)
 		resize = recurseIntoDirectory (".");
+
+	error (INFO, "NUM_TAGS=%d", numTagsWritten);
 
 	timeStamp (1);
 

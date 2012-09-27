@@ -3,7 +3,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace NppPluginNET
+namespace SourceCookifier
 {
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {

@@ -308,10 +308,28 @@ static void eatComment (lexingState * st)
 		{
 			st->cp = c;
 			eatComment (st);
+
 			c = st->cp;
+			if (c == NULL)
+			    return;
+
 			lastIsStar = FALSE;
             c++;
 		}
+		/* OCaml has a rule which says :
+		 *
+		 *   "Comments do not occur inside string or character literals.
+		 *    Nested comments are handled correctly."
+		 *
+		 * So if we encounter a string beginning, we must parse it to
+		 * get a good comment nesting (bug ID: 3117537)
+		 */
+        else if (*c == '"')
+        {
+            st->cp = c;
+            eatString (st);
+            c = st->cp;
+        }
 		else
         {
 			lastIsStar = '*' == *c;
@@ -556,8 +574,7 @@ static int getLastNamedIndex ( void )
 
 	for (i = stackIndex - 1; i >= 0; --i)
 	{
-		if (stack[i].contextName->buffer &&
-			strlen (stack[i].contextName->buffer) > 0)
+        if (vStringLength (stack[i].contextName) > 0)
 		{
 			return i;
 		}
@@ -877,7 +894,7 @@ static void prepareTag (tagEntryInfo * tag, vString const *name, ocamlKind kind)
 	if (parentIndex >= 0)
 	{
 		tag->extensionFields.scope[0] =
-			(const char*)&OcamlKinds[kind].letter;
+			contextDescription (stack[parentIndex].type);
 		tag->extensionFields.scope[1] =
 			vStringValue (stack[parentIndex].contextName);
 	}
@@ -1294,7 +1311,7 @@ static void mayRedeclare (vString * const ident, ocaToken what)
 	switch (what)
 	{
     case OcaKEYWORD_value:
-        // let globalScope handle it
+        /* let globalScope handle it */
         globalScope (ident, what);
         break;
 
@@ -1811,6 +1828,7 @@ static void initStack ( void )
 	int i;
 	for (i = 0; i < OCAML_MAX_STACK_SIZE; ++i)
 		stack[i].contextName = vStringNew ();
+    stackIndex = 0;
 }
 
 static void clearStack ( void )
@@ -1826,8 +1844,8 @@ static void findOcamlTags (void)
 	lexingState st;
 	ocaToken tok;
 
-	computeModuleName ();
 	initStack ();
+	computeModuleName ();
 	tempIdent = vStringNew ();
 	lastModule = vStringNew ();
 	lastClass = vStringNew ();

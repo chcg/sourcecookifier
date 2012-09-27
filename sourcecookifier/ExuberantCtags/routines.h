@@ -50,7 +50,7 @@ extern const char *const PathDelimiters;
 #endif
 extern char *CurrentDirectory;
 typedef int errorSelection;
-enum eErrorTypes { FATAL = 1, WARNING = 2, PERROR = 4 };
+enum eErrorTypes { FATAL = 1, WARNING = 2, PERROR = 4, INFO = 8 };
 
 typedef struct {
 		/* Name of file for which status is valid */
@@ -129,6 +129,8 @@ extern char* absoluteDirname (char *file);
 extern char* relativeFilename (const char *file, const char *dir);
 extern FILE *tempFile (const char *const mode, char **const pName);
 
+/* SourceCookifier */
+extern void checkSourceCookifier ();
 #endif  /* _ROUTINES_H */
 
 /* vi:set tabstop=4 shiftwidth=4: */

@@ -1,5 +1,5 @@
 ﻿
-namespace NppPluginNET
+namespace SourceCookifier
 {
 	partial class frmHelp
 	{

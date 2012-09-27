@@ -1,7 +1,7 @@
 @echo off
 
 set polname=SourceCookifier
-set target=%~dp0*
+set target=%~dp0..\*
 
 for /F "tokens=2* delims=	 " %%A in ('REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework" /v InstallRoot') do set runtimes=%%B
 set caspol="%runtimes%v2.0.50727\caspol.exe"

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
-namespace NppPluginNET
+namespace SourceCookifier
 {
 	partial class frmHelp : Form
 	{
@@ -11,7 +11,7 @@ namespace NppPluginNET
 		{
 			InitializeComponent();
 			Icon = Properties.Resources.cookie_monster;
-			try { rtbHelp.Rtf = Encoding.ASCII.GetString(Properties.Resources.help); } catch { }
+			try { rtbHelp.Rtf = Properties.Resources.help_rtf; } catch { }
 		}
 		
 		void RtbHelpLinkClicked(object sender, LinkClickedEventArgs e)

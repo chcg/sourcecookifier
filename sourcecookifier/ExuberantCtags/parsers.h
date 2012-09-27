@@ -25,11 +25,13 @@
 	CParser, \
 	CppParser, \
 	CsharpParser, \
+	CssParser, \
 	CobolParser, \
 	DosBatchParser, \
 	EiffelParser, \
 	ErlangParser, \
-	FlexParser, \
+	FglParser, \
+  FlexParser, \
 	FortranParser, \
 	HtmlParser, \
 	JavaParser, \
@@ -38,6 +40,7 @@
 	LuaParser, \
 	MakefileParser, \
 	MatLabParser, \
+	ObjcParser , \
 	OcamlParser, \
 	PascalParser, \
 	PerlParser, \

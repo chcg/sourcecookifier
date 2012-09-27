@@ -1,4 +1,4 @@
-﻿namespace NppPluginNET
+﻿namespace SourceCookifier
 {
 	partial class frmSettings
 	{
@@ -31,6 +31,8 @@
 			this.btnOK = new System.Windows.Forms.Button();
 			this.lbxLanguages = new System.Windows.Forms.ListBox();
 			this.gbxLanguage = new System.Windows.Forms.GroupBox();
+			this.btnLanguageExport = new System.Windows.Forms.Button();
+			this.btnLanguageImport = new System.Windows.Forms.Button();
 			this.tbxNewLanguage = new System.Windows.Forms.TextBox();
 			this.btnLanguageDel = new System.Windows.Forms.Button();
 			this.btnLanguageAdd = new System.Windows.Forms.Button();
@@ -108,17 +110,20 @@
 			// lbxLanguages
 			// 
 			this.lbxLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.lbxLanguages.FormattingEnabled = true;
 			this.lbxLanguages.Location = new System.Drawing.Point(6, 19);
 			this.lbxLanguages.Name = "lbxLanguages";
-			this.lbxLanguages.Size = new System.Drawing.Size(126, 290);
+			this.lbxLanguages.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+			this.lbxLanguages.Size = new System.Drawing.Size(126, 238);
 			this.lbxLanguages.Sorted = true;
 			this.lbxLanguages.TabIndex = 1;
 			this.lbxLanguages.SelectedIndexChanged += new System.EventHandler(this.LbxLanguagesSelectedIndexChanged);
 			// 
 			// gbxLanguage
 			// 
+			this.gbxLanguage.Controls.Add(this.btnLanguageExport);
+			this.gbxLanguage.Controls.Add(this.btnLanguageImport);
 			this.gbxLanguage.Controls.Add(this.tbxNewLanguage);
 			this.gbxLanguage.Controls.Add(this.btnLanguageDel);
 			this.gbxLanguage.Controls.Add(this.lbxLanguages);
@@ -130,9 +135,30 @@
 			this.gbxLanguage.TabStop = false;
 			this.gbxLanguage.Text = "Language";
 			// 
+			// btnLanguageExport
+			// 
+			this.btnLanguageExport.Enabled = false;
+			this.btnLanguageExport.Location = new System.Drawing.Point(6, 314);
+			this.btnLanguageExport.Name = "btnLanguageExport";
+			this.btnLanguageExport.Size = new System.Drawing.Size(126, 23);
+			this.btnLanguageExport.TabIndex = 24;
+			this.btnLanguageExport.Text = "Export language(s)";
+			this.btnLanguageExport.UseVisualStyleBackColor = true;
+			this.btnLanguageExport.Click += new System.EventHandler(this.BtnLanguageExportClick);
+			// 
+			// btnLanguageImport
+			// 
+			this.btnLanguageImport.Location = new System.Drawing.Point(6, 340);
+			this.btnLanguageImport.Name = "btnLanguageImport";
+			this.btnLanguageImport.Size = new System.Drawing.Size(126, 23);
+			this.btnLanguageImport.TabIndex = 23;
+			this.btnLanguageImport.Text = "Import language(s)";
+			this.btnLanguageImport.UseVisualStyleBackColor = true;
+			this.btnLanguageImport.Click += new System.EventHandler(this.BtnLanguageImportClick);
+			// 
 			// tbxNewLanguage
 			// 
-			this.tbxNewLanguage.Location = new System.Drawing.Point(6, 343);
+			this.tbxNewLanguage.Location = new System.Drawing.Point(6, 290);
 			this.tbxNewLanguage.Name = "tbxNewLanguage";
 			this.tbxNewLanguage.Size = new System.Drawing.Size(126, 20);
 			this.tbxNewLanguage.TabIndex = 21;
@@ -141,7 +167,7 @@
 			// btnLanguageDel
 			// 
 			this.btnLanguageDel.Enabled = false;
-			this.btnLanguageDel.Location = new System.Drawing.Point(72, 314);
+			this.btnLanguageDel.Location = new System.Drawing.Point(72, 261);
 			this.btnLanguageDel.Name = "btnLanguageDel";
 			this.btnLanguageDel.Size = new System.Drawing.Size(60, 23);
 			this.btnLanguageDel.TabIndex = 22;
@@ -152,7 +178,7 @@
 			// btnLanguageAdd
 			// 
 			this.btnLanguageAdd.Enabled = false;
-			this.btnLanguageAdd.Location = new System.Drawing.Point(6, 314);
+			this.btnLanguageAdd.Location = new System.Drawing.Point(6, 261);
 			this.btnLanguageAdd.Name = "btnLanguageAdd";
 			this.btnLanguageAdd.Size = new System.Drawing.Size(60, 23);
 			this.btnLanguageAdd.TabIndex = 21;
@@ -232,8 +258,8 @@
 			// lbxTagTypes
 			// 
 			this.lbxTagTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.lbxTagTypes.FormattingEnabled = true;
 			this.lbxTagTypes.Location = new System.Drawing.Point(6, 19);
 			this.lbxTagTypes.Name = "lbxTagTypes";
@@ -291,7 +317,7 @@
 			// lbxExtensions
 			// 
 			this.lbxExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.lbxExtensions.FormattingEnabled = true;
 			this.lbxExtensions.Location = new System.Drawing.Point(6, 19);
 			this.lbxExtensions.Name = "lbxExtensions";
@@ -729,6 +755,7 @@
 			this.gbxSemantics.ResumeLayout(false);
 			this.gbxSemantics.PerformLayout();
 			this.ResumeLayout(false);
+
 		}
 		private System.Windows.Forms.Label lblSemanticsScopeOperator;
 		private System.Windows.Forms.TextBox tbxSemanticsScopeOperator;
@@ -787,5 +814,7 @@
 		private System.Windows.Forms.GroupBox gbxLanguage;
 		private System.Windows.Forms.ListBox lbxLanguages;
 		private System.Windows.Forms.Button btnOK;
+		private System.Windows.Forms.Button btnLanguageExport;
+		private System.Windows.Forms.Button btnLanguageImport;
 	}
 }

@@ -135,29 +135,32 @@ static boolean isIdentifierCharacter (int c)
  * extract all relevant information and create a tag.
  */
 static void makeFunctionTag (vString *const function,
-	vString *const parent, int is_class_parent, const char *arglist __unused__)
+	vString *const parent, int parent_type, const char *arglist __unused__)
 {
 	tagEntryInfo tag;
 	initTagEntry (&tag, vStringValue (function));
 
 	tag.kindName = "function";
 	tag.kind = 'f';
-	/* tag.extensionFields.arglist = arglist; */
+	tag.extensionFields.signature = arglist;
 
 	if (vStringLength (parent) > 0)
 	{
-		if (is_class_parent)
+		if (parent_type == K_CLASS)
 		{
 			tag.kindName = "member";
 			tag.kind = 'm';
 			tag.extensionFields.scope [0] = "c";
-			tag.extensionFields.scope [1] = vStringValue (parent);
 		}
+    else if (parent_type == K_MEMBER)
+    {
+			tag.extensionFields.scope [0] = "m";
+    }
 		else
 		{
 			tag.extensionFields.scope [0] = "f";
-			tag.extensionFields.scope [1] = vStringValue (parent);
 		}
+		tag.extensionFields.scope [1] = vStringValue (parent);
 	}
 
 	/* If a function starts with __, we mark it as file scope.
@@ -181,7 +184,7 @@ static void makeFunctionTag (vString *const function,
  * keyword, extract all necessary information and create a tag.
  */
 static void makeClassTag (vString *const class, vString *const inheritance,
-	vString *const parent, int is_class_parent)
+	vString *const parent, int parent_type)
 {
 	tagEntryInfo tag;
 	initTagEntry (&tag, vStringValue (class));
@@ -189,16 +192,19 @@ static void makeClassTag (vString *const class, vString *const inheritance,
 	tag.kind = 'c';
 	if (vStringLength (parent) > 0)
 	{
-		if (is_class_parent)
+		if (parent_type == K_CLASS)
 		{
 			tag.extensionFields.scope [0] = "c";
-			tag.extensionFields.scope [1] = vStringValue (parent);
+		}
+		else if (parent_type == K_MEMBER)
+		{
+			tag.extensionFields.scope [0] = "m";
 		}
 		else
 		{
 			tag.extensionFields.scope [0] = "f";
-			tag.extensionFields.scope [1] = vStringValue (parent);
 		}
+		tag.extensionFields.scope [1] = vStringValue (parent);
 	}
 	tag.extensionFields.inheritance = vStringValue (inheritance);
 	makeTagEntry (&tag);
@@ -295,7 +301,7 @@ static const char *parseIdentifier (const char *cp, vString *const identifier)
 }
 
 static void parseClass (const char *cp, vString *const class,
-	vString *const parent, int is_class_parent)
+	vString *const parent, int parent_type)
 {
 	vString *const inheritance = vStringNew ();
 	vStringClear (inheritance);
@@ -319,7 +325,7 @@ static void parseClass (const char *cp, vString *const class,
 		}
 		vStringTerminate (inheritance);
 	}
-	makeClassTag (class, inheritance, parent, is_class_parent);
+	makeClassTag (class, inheritance, parent, parent_type);
 	vStringDelete (inheritance);
 }
 
@@ -391,13 +397,13 @@ static char *parseArglist(const char *buf)
 }
 
 static void parseFunction (const char *cp, vString *const def,
-	vString *const parent, int is_class_parent)
+	vString *const parent, int parent_type)
 {
 	char *arglist;
 
 	cp = parseIdentifier (cp, def);
 	arglist = parseArglist (cp);
-	makeFunctionTag (def, parent, is_class_parent, arglist);
+	makeFunctionTag (def, parent, parent_type, arglist);
 	if (arglist != NULL) {
 		eFree (arglist);
 	}
@@ -414,12 +420,12 @@ static void parseFunction (const char *cp, vString *const def,
  * Would produce this string:
  * MyClass.MyFunction/SubFunction/SubClass.Method
  */
-static boolean constructParentString(NestingLevels *nls, int indent,
+static int constructParentString(NestingLevels *nls, int indent,
 	vString *result)
 {
 	int i;
 	NestingLevel *prev = NULL;
-	int is_class = FALSE;
+	int parent_type = -1;
 	vStringClear (result);
 	for (i = 0; i < nls->n; i++)
 	{
@@ -436,11 +442,11 @@ static boolean constructParentString(NestingLevels *nls, int indent,
 				vStringCatS(result, "/");
 */
 		}
+    parent_type = nl->type;
 		vStringCat(result, nl->name);
-		is_class = (nl->type == K_CLASS);
 		prev = nl;
 	}
-	return is_class;
+	return parent_type;
 }
 
 /* Check whether parent's indentation level is higher than the current level and
@@ -468,7 +474,7 @@ static void checkParent(NestingLevels *nls, int indent, vString *parent)
 }
 
 static void addNestingLevel(NestingLevels *nls, int indentation,
-	const vString *name, boolean is_class)
+	const vString *name, int type)
 {
 	int i;
 	NestingLevel *nl = NULL;
@@ -489,7 +495,7 @@ static void addNestingLevel(NestingLevels *nls, int indentation,
 		vStringCopy(nl->name, name);
 	}
 	nl->indentation = indentation;
-	nl->type = is_class ? K_CLASS : !K_CLASS;
+	nl->type = type;
 }
 
 /* Return a pointer to the start of the next triple string, or NULL. Store
@@ -580,7 +586,7 @@ static const char *findVariable(const char *line)
 }
 
 /* Skip type declaration that optionally follows a cdef/cpdef */
-static const char *skipTypeDecl (const char *cp, boolean *is_class)
+static const char *skipTypeDecl (const char *cp, int *type)
 {
 	const char *lastStart = cp, *ptr = cp;
 	int loopCount = 0;
@@ -592,7 +598,7 @@ static const char *skipTypeDecl (const char *cp, boolean *is_class)
 	}
 	if (!strncmp("class", ptr, 5)) {
 		ptr += 5 ;
-		*is_class = TRUE;
+		*type = K_CLASS;
 		ptr = skipSpace(ptr);
 		return ptr;
 	}
@@ -678,22 +684,23 @@ static void findPythonTags (void)
 		if (keyword)
 		{
 			boolean found = FALSE;
-			boolean is_class = FALSE;
+			int type = -1;
 			if (!strncmp (keyword, "def ", 4))
 			{
 				cp = skipSpace (keyword + 3);
 				found = TRUE;
+        type = K_FUNCTION;
 			}
 			else if (!strncmp (keyword, "class ", 6))
 			{
 				cp = skipSpace (keyword + 5);
 				found = TRUE;
-				is_class = TRUE;
+				type = K_CLASS;
 			}
 			else if (!strncmp (keyword, "cdef ", 5))
 		    {
 		        cp = skipSpace(keyword + 4);
-		        candidate = skipTypeDecl (cp, &is_class);
+		        candidate = skipTypeDecl (cp, &type);
 		        if (candidate)
 		        {
 		    		found = TRUE;
@@ -704,7 +711,7 @@ static void findPythonTags (void)
     		else if (!strncmp (keyword, "cpdef ", 6))
 		    {
 		        cp = skipSpace(keyword + 5);
-		        candidate = skipTypeDecl (cp, &is_class);
+		        candidate = skipTypeDecl (cp, &type);
 		        if (candidate)
 		        {
 		    		found = TRUE;
@@ -714,17 +721,23 @@ static void findPythonTags (void)
 
 			if (found)
 			{
-				boolean is_parent_class;
+				int parent_type;
 
-				is_parent_class =
+				parent_type =
 					constructParentString(nesting_levels, indent, parent);
 
-				if (is_class)
-					parseClass (cp, name, parent, is_parent_class);
+				if (type == K_CLASS)
+        {
+					parseClass (cp, name, parent, parent_type);
+        }
 				else
-					parseFunction(cp, name, parent, is_parent_class);
+        {
+					parseFunction(cp, name, parent, parent_type);
+          if (parent_type == K_CLASS)
+            type = K_MEMBER;
+        }
 
-				addNestingLevel(nesting_levels, indent, name, is_class);
+				addNestingLevel(nesting_levels, indent, name, type);
 			}
 		}
 		/* Find global and class variables */
@@ -732,7 +745,7 @@ static void findPythonTags (void)
 		if (variable)
 		{
 			const char *start = variable;
-			boolean parent_is_class;
+			int parent_type;
 
 			vStringClear (name);
 			while (isIdentifierCharacter ((int) *start))
@@ -742,9 +755,9 @@ static void findPythonTags (void)
 			}
 			vStringTerminate (name);
 
-			parent_is_class = constructParentString(nesting_levels, indent, parent);
+			parent_type = constructParentString(nesting_levels, indent, parent);
 			/* skip variables in methods */
-			if (! parent_is_class && vStringLength(parent) > 0)
+			if (!((parent_type == K_CLASS) || (parent_type == K_MEMBER)) && vStringLength(parent) > 0)
 				continue;
 
 			makeVariableTag (name, parent);

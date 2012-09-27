@@ -434,9 +434,10 @@ static boolean enableLanguageKind (
 		const langType language, const int kind, const boolean mode)
 {
 	boolean result = FALSE;
-	if (LanguageTable [language]->regex)
-		result = enableRegexKind (language, kind, mode);
-	else
+	//if (LanguageTable [language]->regex)
+	//	result = enableRegexKind (language, kind, mode);
+	result = enableRegexKind (language, kind, mode);
+	if (! result)
 	{
 		kindOption* const opt = langKindOption (language, kind);
 		if (opt != NULL)

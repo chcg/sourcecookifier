@@ -1,5 +1,5 @@
 /*
-*   $Id: c.c 689 2008-12-13 21:17:36Z elliotth $
+*   $Id: c.c 780 2011-12-10 22:48:25Z dhiebert $
 *
 *   Copyright (c) 1996-2003, Darren Hiebert
 *
@@ -932,7 +932,8 @@ static boolean includeTag (const tagType type, const boolean isFileScope)
 	boolean result;
 	if (isFileScope  &&  ! Option.include.fileScope)
 		result = FALSE;
-	else if (isLanguage (Lang_csharp))
+	// hack: enabling local tags for C# results in a bunch of false positives
+	else if (isLanguage (Lang_csharp))// && (type != TAG_LOCAL))
 		result = CsharpKinds [csharpTagKind (type)].enabled;
 	else if (isLanguage (Lang_java))
 		result = JavaKinds [javaTagKind (type)].enabled;
@@ -1234,10 +1235,16 @@ static void qualifyFunctionDeclTag (const statementInfo *const st,
 	if (! isType (nameToken, TOKEN_NAME))
 		;
 	else if (isLanguage (Lang_java) || isLanguage (Lang_csharp))
-		qualifyFunctionTag (st, nameToken);
+	{
+		// FIX: Do NOT interprete method calls as locals!
+		if (isValidTypeSpecifier (st->declaration) && (! st->inFunction))
+			qualifyFunctionTag (st, nameToken);
+	}
 	else if (st->scope == SCOPE_TYPEDEF)
 		makeTag (nameToken, st, TRUE, TAG_TYPEDEF);
-	else if (isValidTypeSpecifier (st->declaration) && ! isLanguage (Lang_csharp))
+	else if (isValidTypeSpecifier (st->declaration)
+		&& ! st->notVariable /* FIX: Do NOT interpret "var-unlike" types as prototype */
+		&& ! isLanguage (Lang_csharp) /* FIX: Do NEVER interpret any C# type as prototype! */)
 		makeTag (nameToken, st, TRUE, TAG_PROTOTYPE);
 }
 
@@ -1310,7 +1317,7 @@ static void qualifyVariableTag (const statementInfo *const st,
 			else if (st->inFunction)
 				makeTag (nameToken, st, (boolean) (st->scope == SCOPE_STATIC),
 						TAG_LOCAL);
-			else
+			else if (! isLanguage (Lang_csharp))
 				makeTag (nameToken, st, (boolean) (st->scope == SCOPE_STATIC),
 						TAG_VARIABLE);
 		}
@@ -2257,6 +2264,9 @@ static int parseParens (statementInfo *const st, parenInfo *const info)
 
 		switch (c)
 		{
+			case '^':
+				break;
+
 			case '&':
 			case '*':
 				info->isPointer = TRUE;
@@ -2812,6 +2822,7 @@ static void tagCheck (statementInfo *const st)
 	const tokenInfo *const token = activeToken (st);
 	const tokenInfo *const prev  = prevToken (st, 1);
 	const tokenInfo *const prev2 = prevToken (st, 2);
+	const tokenInfo *const prev3 = prevToken (st, 3);
 
 	switch (token->type)
 	{
@@ -2834,7 +2845,9 @@ static void tagCheck (statementInfo *const st)
 						st->declaration = DECL_FUNCTION;
 					if (isType (prev2, TOKEN_NAME))
 						copyToken (st->blockName, prev2);
-					qualifyFunctionTag (st, prev2);
+					// FIX: Do NOT interprete statements like 'catch' as locals!
+					if (! st->inFunction)
+						qualifyFunctionTag (st, prev2);
 				}
 			}
 			else if (isContextualStatement (st) ||
@@ -2856,8 +2869,12 @@ static void tagCheck (statementInfo *const st)
 				}
 				qualifyBlockTag (st, prev);
 			}
-			else if (isLanguage (Lang_csharp))
-				makeTag (prev, st, FALSE, TAG_PROPERTY);
+			else if (isLanguage (Lang_csharp) && (prev2))
+			{
+				// FIX: Do NOT interpret 'set' and 'get' as properties!
+				if (! isType (prev2, TOKEN_NONE))
+					makeTag (prev, st, FALSE, TAG_PROPERTY);
+			}
 			break;
 
 		case TOKEN_SEMICOLON:
@@ -2876,7 +2893,11 @@ static void tagCheck (statementInfo *const st)
 				if (st->isPointer)
 					qualifyVariableTag (st, prev2);
 				else
-					qualifyFunctionDeclTag (st, prev2);
+				{
+					// FIX: Do NOT interpret usual function calls as prototypes!
+					if (isType (prev3, TOKEN_KEYWORD) || (! st->gotParenName))
+						qualifyFunctionDeclTag (st, prev2);
+				}
 			}
 			if (isLanguage (Lang_java) && token->type == TOKEN_SEMICOLON && insideEnumBody (st))
 			{

@@ -117,4 +117,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ttOptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="cbxHandleCtagsWarnings.ToolTip" xml:space="preserve">
+    <value>Check this if you are about to add new regex rules to new
+or existing languages. If there's something wrong with a
+regex rule, then it will be shown as a warning tooltip for
+the regarding source node.</value>
+  </data>
+  <data name="cbxSaveRelativePaths.ToolTip" xml:space="preserve">
+    <value>If you need to move or ship whole source code folder
+structures together with session files in it, then you
+have to check this option. Don't forget that you can't
+move session files without moving all refernced source
+files in that case. But you could still resave the current
+session file to a new file path.</value>
+  </data>
+  <data name="cbxShowGtdToolTips.ToolTip" xml:space="preserve">
+    <value>When you hit "Go To Definition" and receive more than one
+resulting tag, than these tags are listed in an opening context
+menu. Now if you check this option, then the full file paths of
+the resulting tags' source files are not shown in the context
+menu itself, but only the filenames. The full path can be seen
+in the tooltip of the regarding menu entry instead.</value>
+  </data>
+  <data name="lblMaxNumShownSymbols.ToolTip" xml:space="preserve">
+    <value>It's recommended to limit the count of
+symbols which are shown as nodes in the
+treeview, in order to prevent a hanging N++
+when for instance source files with several
+thousand symbols are analyzed.
+When in cookie session mode, then such
+files are automatically loaded into the
+INCLUDES folder. In the other modes the
+symbols of such files aren't loaded at all.</value>
+  </data>
+  <data name="tbxMaxNumShownSymbols.ToolTip" xml:space="preserve">
+    <value>It's recommended to limitate the count of
+symbols which are shown as nodes in the
+treeview, in order to prevent a hanging N++
+when for instance source files with several
+thousand symbols are analyzed.
+When in cookie session mode, then such
+files are automatically loaded into the
+INCLUDES folder. In the other modes the
+symbols of such files aren't loaded at all.</value>
+  </data>
 </root>

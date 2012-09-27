@@ -1,4 +1,11 @@
 -session scoped hierarchical class view
 -update help
--auto restore damaged settings files
 -fix move-mouse-from-toolbar-overflow-menu-back-to-toolbar-blocks-global-shortcuts bug
+-fix deadlock when switching focus from plugin's sub control (search textbox) directly
+ to editor window. Only happens when plugin windows is not docked (floating)
+-don't let N++ eat up shortcuts when plugin is focused
+-issues with NppFtp (doesn't recognize new files, crashes when saving)
+-check web for additional ctags improvements/extensions
+-remove all the hard coded references to "\\" and use Path.Combine instead
+ http://sourceforge.net/tracker/index.php?func=detail&aid=3564871&group_id=296698&atid=1252213
+-log w/o admin rights (not into "C:\")

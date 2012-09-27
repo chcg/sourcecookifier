@@ -1,5 +1,5 @@
 ﻿
-namespace NppPluginNET
+namespace SourceCookifier
 {
 	public partial class frmMain
 	{
@@ -83,6 +83,9 @@ namespace NppPluginNET
 			this.tsProgress = new System.Windows.Forms.ToolStrip();
 			this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.ttTv = new System.Windows.Forms.ToolTip(this.components);
+			this.tssTv2 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.cmsTv.SuspendLayout();
 			this.cmsDisplay.SuspendLayout();
 			this.tsBar.SuspendLayout();
@@ -114,16 +117,19 @@ namespace NppPluginNET
 			// cmsTv
 			// 
 			this.cmsTv.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiShow,
-									this.tsmiTrackCaret,
-									this.tsmiDisplay,
-									this.tssTv,
-									this.tsmiRemove,
-									this.tsmiMove});
+			this.tsmiShow,
+			this.tsmiTrackCaret,
+			this.tsmiDisplay,
+			this.tssTv,
+			this.tsmiCollapseAll,
+			this.tsmiExpandAll,
+			this.tssTv2,
+			this.tsmiRemove,
+			this.tsmiMove});
 			this.cmsTv.Name = "cmsTv";
 			this.cmsTv.ShowImageMargin = false;
 			this.cmsTv.ShowItemToolTips = false;
-			this.cmsTv.Size = new System.Drawing.Size(147, 120);
+			this.cmsTv.Size = new System.Drawing.Size(147, 192);
 			this.cmsTv.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.CmsTvClosed);
 			this.cmsTv.Opening += new System.ComponentModel.CancelEventHandler(this.CmsTvOpening);
 			this.cmsTv.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CmsTvItemClicked);
@@ -168,10 +174,10 @@ namespace NppPluginNET
 			// cmsDisplay
 			// 
 			this.cmsDisplay.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiAccess,
-									this.tsmiReturnType,
-									this.tsmiScope,
-									this.tsmiSignature});
+			this.tsmiAccess,
+			this.tsmiReturnType,
+			this.tsmiScope,
+			this.tsmiSignature});
 			this.cmsDisplay.Name = "cmsShow";
 			this.cmsDisplay.OwnerItem = this.tsmiDisplay;
 			this.cmsDisplay.ShowCheckMargin = true;
@@ -227,13 +233,13 @@ namespace NppPluginNET
 			// 
 			this.tsBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.tsBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsBtnSearchMode,
-									this.tsTbxSearchFilter,
-									this.tsBtnClearSearchFilter,
-									this.tsDdbtnSession,
-									this.tsDdbtnView,
-									this.tsBtnRefresh,
-									this.tsDdbtnSettings});
+			this.tsBtnSearchMode,
+			this.tsTbxSearchFilter,
+			this.tsBtnClearSearchFilter,
+			this.tsDdbtnSession,
+			this.tsDdbtnView,
+			this.tsBtnRefresh,
+			this.tsDdbtnSettings});
 			this.tsBar.Location = new System.Drawing.Point(0, 0);
 			this.tsBar.Name = "tsBar";
 			this.tsBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -245,7 +251,7 @@ namespace NppPluginNET
 			// 
 			this.tsBtnSearchMode.CheckOnClick = true;
 			this.tsBtnSearchMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.tsBtnSearchMode.Image = global::NppPluginNET.Properties.Resources.search_tags;
+			this.tsBtnSearchMode.Image = global::SourceCookifier.Properties.Resources.search_tags;
 			this.tsBtnSearchMode.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.tsBtnSearchMode.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsBtnSearchMode.Name = "tsBtnSearchMode";
@@ -268,7 +274,7 @@ namespace NppPluginNET
 			this.tsBtnClearSearchFilter.AutoSize = false;
 			this.tsBtnClearSearchFilter.BackColor = System.Drawing.SystemColors.Window;
 			this.tsBtnClearSearchFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.tsBtnClearSearchFilter.Image = global::NppPluginNET.Properties.Resources.cancel;
+			this.tsBtnClearSearchFilter.Image = global::SourceCookifier.Properties.Resources.cancel;
 			this.tsBtnClearSearchFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.tsBtnClearSearchFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsBtnClearSearchFilter.Name = "tsBtnClearSearchFilter";
@@ -281,16 +287,16 @@ namespace NppPluginNET
 			// 
 			this.tsDdbtnSession.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.tsDdbtnSession.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiSingleFileMode,
-									this.tssSession1,
-									this.tsmiNppSessionMode,
-									this.tssSession2,
-									this.tsmiCookieSessionMode,
-									this.tsmiSessionLoad,
-									this.tsmiSessionSave,
-									this.tsmiSessionClear,
-									this.tssSession3});
-			this.tsDdbtnSession.Image = global::NppPluginNET.Properties.Resources.session_mode_none;
+			this.tsmiSingleFileMode,
+			this.tssSession1,
+			this.tsmiNppSessionMode,
+			this.tssSession2,
+			this.tsmiCookieSessionMode,
+			this.tsmiSessionLoad,
+			this.tsmiSessionSave,
+			this.tsmiSessionClear,
+			this.tssSession3});
+			this.tsDdbtnSession.Image = global::SourceCookifier.Properties.Resources.session_mode_none;
 			this.tsDdbtnSession.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsDdbtnSession.Name = "tsDdbtnSession";
 			this.tsDdbtnSession.ShowDropDownArrow = false;
@@ -302,7 +308,7 @@ namespace NppPluginNET
 			// 
 			// tsmiSingleFileMode
 			// 
-			this.tsmiSingleFileMode.Image = global::NppPluginNET.Properties.Resources.session_mode_none;
+			this.tsmiSingleFileMode.Image = global::SourceCookifier.Properties.Resources.session_mode_none;
 			this.tsmiSingleFileMode.Name = "tsmiSingleFileMode";
 			this.tsmiSingleFileMode.Size = new System.Drawing.Size(186, 22);
 			this.tsmiSingleFileMode.Text = "Single file mode";
@@ -314,7 +320,7 @@ namespace NppPluginNET
 			// 
 			// tsmiNppSessionMode
 			// 
-			this.tsmiNppSessionMode.Image = global::NppPluginNET.Properties.Resources.session_mode_npp;
+			this.tsmiNppSessionMode.Image = global::SourceCookifier.Properties.Resources.session_mode_npp;
 			this.tsmiNppSessionMode.Name = "tsmiNppSessionMode";
 			this.tsmiNppSessionMode.Size = new System.Drawing.Size(186, 22);
 			this.tsmiNppSessionMode.Text = "N++ session mode";
@@ -326,14 +332,14 @@ namespace NppPluginNET
 			// 
 			// tsmiCookieSessionMode
 			// 
-			this.tsmiCookieSessionMode.Image = global::NppPluginNET.Properties.Resources.session_mode_sc;
+			this.tsmiCookieSessionMode.Image = global::SourceCookifier.Properties.Resources.session_mode_sc;
 			this.tsmiCookieSessionMode.Name = "tsmiCookieSessionMode";
 			this.tsmiCookieSessionMode.Size = new System.Drawing.Size(186, 22);
 			this.tsmiCookieSessionMode.Text = "Cookie session mode";
 			// 
 			// tsmiSessionLoad
 			// 
-			this.tsmiSessionLoad.Image = global::NppPluginNET.Properties.Resources.session_load;
+			this.tsmiSessionLoad.Image = global::SourceCookifier.Properties.Resources.session_load;
 			this.tsmiSessionLoad.Name = "tsmiSessionLoad";
 			this.tsmiSessionLoad.Size = new System.Drawing.Size(186, 22);
 			this.tsmiSessionLoad.Text = "Load";
@@ -341,7 +347,7 @@ namespace NppPluginNET
 			// tsmiSessionSave
 			// 
 			this.tsmiSessionSave.Enabled = false;
-			this.tsmiSessionSave.Image = global::NppPluginNET.Properties.Resources.session_save;
+			this.tsmiSessionSave.Image = global::SourceCookifier.Properties.Resources.session_save;
 			this.tsmiSessionSave.Name = "tsmiSessionSave";
 			this.tsmiSessionSave.Size = new System.Drawing.Size(186, 22);
 			this.tsmiSessionSave.Text = "Save";
@@ -349,7 +355,7 @@ namespace NppPluginNET
 			// tsmiSessionClear
 			// 
 			this.tsmiSessionClear.Enabled = false;
-			this.tsmiSessionClear.Image = global::NppPluginNET.Properties.Resources.session_clear;
+			this.tsmiSessionClear.Image = global::SourceCookifier.Properties.Resources.session_clear;
 			this.tsmiSessionClear.Name = "tsmiSessionClear";
 			this.tsmiSessionClear.Size = new System.Drawing.Size(186, 22);
 			this.tsmiSessionClear.Text = "Clear";
@@ -363,18 +369,18 @@ namespace NppPluginNET
 			// 
 			this.tsDdbtnView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.tsDdbtnView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiFlatView,
-									this.tsmiFlatGroupedView,
-									this.tssView1,
-									this.tsmiGroupedView,
-									this.tssView2,
-									this.tsmiClassViewSingle,
-									this.tsmiClassViewSession,
-									this.tsmiView3,
-									this.tsmiShowIcons,
-									this.tsmiAlphabeticalSort,
-									this.tsmiFold});
-			this.tsDdbtnView.Image = global::NppPluginNET.Properties.Resources.flat_view;
+			this.tsmiFlatView,
+			this.tsmiFlatGroupedView,
+			this.tssView1,
+			this.tsmiGroupedView,
+			this.tssView2,
+			this.tsmiClassViewSingle,
+			this.tsmiClassViewSession,
+			this.tsmiView3,
+			this.tsmiShowIcons,
+			this.tsmiAlphabeticalSort,
+			this.tsmiFold});
+			this.tsDdbtnView.Image = global::SourceCookifier.Properties.Resources.flat_view;
 			this.tsDdbtnView.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsDdbtnView.Name = "tsDdbtnView";
 			this.tsDdbtnView.ShowDropDownArrow = false;
@@ -384,7 +390,7 @@ namespace NppPluginNET
 			// 
 			// tsmiFlatView
 			// 
-			this.tsmiFlatView.Image = global::NppPluginNET.Properties.Resources.flat_view;
+			this.tsmiFlatView.Image = global::SourceCookifier.Properties.Resources.flat_view;
 			this.tsmiFlatView.Name = "tsmiFlatView";
 			this.tsmiFlatView.Size = new System.Drawing.Size(177, 22);
 			this.tsmiFlatView.Text = "Flat view";
@@ -392,7 +398,7 @@ namespace NppPluginNET
 			// 
 			// tsmiFlatGroupedView
 			// 
-			this.tsmiFlatGroupedView.Image = global::NppPluginNET.Properties.Resources.flat_grouped_view;
+			this.tsmiFlatGroupedView.Image = global::SourceCookifier.Properties.Resources.flat_grouped_view;
 			this.tsmiFlatGroupedView.Name = "tsmiFlatGroupedView";
 			this.tsmiFlatGroupedView.Size = new System.Drawing.Size(177, 22);
 			this.tsmiFlatGroupedView.Text = "Flat grouped view";
@@ -405,7 +411,7 @@ namespace NppPluginNET
 			// 
 			// tsmiGroupedView
 			// 
-			this.tsmiGroupedView.Image = global::NppPluginNET.Properties.Resources.grouped_view;
+			this.tsmiGroupedView.Image = global::SourceCookifier.Properties.Resources.grouped_view;
 			this.tsmiGroupedView.Name = "tsmiGroupedView";
 			this.tsmiGroupedView.Size = new System.Drawing.Size(177, 22);
 			this.tsmiGroupedView.Text = "Grouped view";
@@ -418,19 +424,20 @@ namespace NppPluginNET
 			// 
 			// tsmiClassViewSingle
 			// 
-			this.tsmiClassViewSingle.Image = global::NppPluginNET.Properties.Resources.class_view_single;
+			this.tsmiClassViewSingle.Image = global::SourceCookifier.Properties.Resources.class_view_single;
 			this.tsmiClassViewSingle.Name = "tsmiClassViewSingle";
 			this.tsmiClassViewSingle.Size = new System.Drawing.Size(177, 22);
-			this.tsmiClassViewSingle.Text = "Class view (single)";
+			this.tsmiClassViewSingle.Text = "Class view";
 			this.tsmiClassViewSingle.Click += new System.EventHandler(this.TsmiClassViewSingleClick);
 			// 
 			// tsmiClassViewSession
 			// 
 			this.tsmiClassViewSession.Enabled = false;
-			this.tsmiClassViewSession.Image = global::NppPluginNET.Properties.Resources.class_view_session;
+			this.tsmiClassViewSession.Image = global::SourceCookifier.Properties.Resources.class_view_session;
 			this.tsmiClassViewSession.Name = "tsmiClassViewSession";
 			this.tsmiClassViewSession.Size = new System.Drawing.Size(177, 22);
 			this.tsmiClassViewSession.Text = "Class view (session)";
+			this.tsmiClassViewSession.Visible = false;
 			this.tsmiClassViewSession.Click += new System.EventHandler(this.TsmiClassViewSessionClick);
 			// 
 			// tsmiView3
@@ -441,7 +448,7 @@ namespace NppPluginNET
 			// tsmiShowIcons
 			// 
 			this.tsmiShowIcons.CheckOnClick = true;
-			this.tsmiShowIcons.Image = global::NppPluginNET.Properties.Resources.show_icon;
+			this.tsmiShowIcons.Image = global::SourceCookifier.Properties.Resources.show_icon;
 			this.tsmiShowIcons.Name = "tsmiShowIcons";
 			this.tsmiShowIcons.Size = new System.Drawing.Size(177, 22);
 			this.tsmiShowIcons.Text = "Show icons";
@@ -450,7 +457,7 @@ namespace NppPluginNET
 			// tsmiAlphabeticalSort
 			// 
 			this.tsmiAlphabeticalSort.CheckOnClick = true;
-			this.tsmiAlphabeticalSort.Image = global::NppPluginNET.Properties.Resources.alphabetical_sort;
+			this.tsmiAlphabeticalSort.Image = global::SourceCookifier.Properties.Resources.alphabetical_sort;
 			this.tsmiAlphabeticalSort.Name = "tsmiAlphabeticalSort";
 			this.tsmiAlphabeticalSort.Size = new System.Drawing.Size(177, 22);
 			this.tsmiAlphabeticalSort.Text = "Alphabetical sort";
@@ -459,10 +466,10 @@ namespace NppPluginNET
 			// tsmiFold
 			// 
 			this.tsmiFold.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiLevel1,
-									this.tsmiLevel2,
-									this.tsmiLevel3});
-			this.tsmiFold.Image = global::NppPluginNET.Properties.Resources.level;
+			this.tsmiLevel1,
+			this.tsmiLevel2,
+			this.tsmiLevel3});
+			this.tsmiFold.Image = global::SourceCookifier.Properties.Resources.level;
 			this.tsmiFold.Name = "tsmiFold";
 			this.tsmiFold.Size = new System.Drawing.Size(177, 22);
 			this.tsmiFold.Text = "Fold";
@@ -491,7 +498,7 @@ namespace NppPluginNET
 			// tsBtnRefresh
 			// 
 			this.tsBtnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.tsBtnRefresh.Image = global::NppPluginNET.Properties.Resources.refresh;
+			this.tsBtnRefresh.Image = global::SourceCookifier.Properties.Resources.refresh;
 			this.tsBtnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsBtnRefresh.Name = "tsBtnRefresh";
 			this.tsBtnRefresh.Size = new System.Drawing.Size(23, 23);
@@ -502,11 +509,11 @@ namespace NppPluginNET
 			// 
 			this.tsDdbtnSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.tsDdbtnSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tsmiLanguageSettings,
-									this.tsmiOptions,
-									this.tssSettings1,
-									this.tsmiHelp});
-			this.tsDdbtnSettings.Image = global::NppPluginNET.Properties.Resources.settings;
+			this.tsmiLanguageSettings,
+			this.tsmiOptions,
+			this.tssSettings1,
+			this.tsmiHelp});
+			this.tsDdbtnSettings.Image = global::SourceCookifier.Properties.Resources.settings;
 			this.tsDdbtnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsDdbtnSettings.Name = "tsDdbtnSettings";
 			this.tsDdbtnSettings.ShowDropDownArrow = false;
@@ -516,7 +523,7 @@ namespace NppPluginNET
 			// 
 			// tsmiLanguageSettings
 			// 
-			this.tsmiLanguageSettings.Image = global::NppPluginNET.Properties.Resources.language_settings;
+			this.tsmiLanguageSettings.Image = global::SourceCookifier.Properties.Resources.language_settings;
 			this.tsmiLanguageSettings.Name = "tsmiLanguageSettings";
 			this.tsmiLanguageSettings.Size = new System.Drawing.Size(170, 22);
 			this.tsmiLanguageSettings.Text = "Language settings";
@@ -524,7 +531,7 @@ namespace NppPluginNET
 			// 
 			// tsmiOptions
 			// 
-			this.tsmiOptions.Image = global::NppPluginNET.Properties.Resources.options;
+			this.tsmiOptions.Image = global::SourceCookifier.Properties.Resources.options;
 			this.tsmiOptions.Name = "tsmiOptions";
 			this.tsmiOptions.Size = new System.Drawing.Size(170, 22);
 			this.tsmiOptions.Text = "Options";
@@ -537,7 +544,7 @@ namespace NppPluginNET
 			// 
 			// tsmiHelp
 			// 
-			this.tsmiHelp.Image = global::NppPluginNET.Properties.Resources.help_1;
+			this.tsmiHelp.Image = global::SourceCookifier.Properties.Resources.help;
 			this.tsmiHelp.Name = "tsmiHelp";
 			this.tsmiHelp.Size = new System.Drawing.Size(170, 22);
 			this.tsmiHelp.Text = "Help";
@@ -548,7 +555,7 @@ namespace NppPluginNET
 			this.tsProgress.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.tsProgress.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.tsProgress.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.tspbProgress});
+			this.tspbProgress});
 			this.tsProgress.Location = new System.Drawing.Point(0, 449);
 			this.tsProgress.Name = "tsProgress";
 			this.tsProgress.Size = new System.Drawing.Size(261, 25);
@@ -562,6 +569,24 @@ namespace NppPluginNET
 			this.tspbProgress.Name = "tspbProgress";
 			this.tspbProgress.Size = new System.Drawing.Size(100, 22);
 			this.tspbProgress.Step = 1;
+			// 
+			// tssTv2
+			// 
+			this.tssTv2.Name = "tssTv2";
+			this.tssTv2.Size = new System.Drawing.Size(143, 6);
+			this.tssTv2.Visible = false;
+			// 
+			// tsmiCollapseAll
+			// 
+			this.tsmiCollapseAll.Name = "tsmiCollapseAll";
+			this.tsmiCollapseAll.Size = new System.Drawing.Size(146, 22);
+			this.tsmiCollapseAll.Text = "Collapse all";
+			// 
+			// tsmiExpandAll
+			// 
+			this.tsmiExpandAll.Name = "tsmiExpandAll";
+			this.tsmiExpandAll.Size = new System.Drawing.Size(146, 22);
+			this.tsmiExpandAll.Text = "Expand all";
 			// 
 			// frmMain
 			// 
@@ -585,6 +610,7 @@ namespace NppPluginNET
 			this.tsProgress.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 		private System.Windows.Forms.ToolStripMenuItem tsmiClassViewSession;
 		private System.Windows.Forms.ToolStripMenuItem tsmiClassViewSingle;
@@ -593,12 +619,12 @@ namespace NppPluginNET
 		private System.Windows.Forms.ToolStripSeparator tssSettings1;
 		private System.Windows.Forms.ToolStripSeparator tssSession3;
 		private System.Windows.Forms.ToolStripButton tsBtnSearchMode;
-		private System.Windows.Forms.ToolStripMenuItem tsmiSingleFileMode;
-		private System.Windows.Forms.ToolStripMenuItem tsmiNppSessionMode;
-		private System.Windows.Forms.ToolStripMenuItem tsmiCookieSessionMode;
+		internal System.Windows.Forms.ToolStripMenuItem tsmiSingleFileMode;
+		internal System.Windows.Forms.ToolStripMenuItem tsmiNppSessionMode;
+		internal System.Windows.Forms.ToolStripMenuItem tsmiCookieSessionMode;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSessionLoad;
-		private System.Windows.Forms.ToolStripMenuItem tsmiSessionSave;
-		private System.Windows.Forms.ToolStripMenuItem tsmiSessionClear;
+		internal System.Windows.Forms.ToolStripMenuItem tsmiSessionSave;
+		internal System.Windows.Forms.ToolStripMenuItem tsmiSessionClear;
 		private System.Windows.Forms.ToolStripMenuItem tsmiFlatView;
 		private System.Windows.Forms.ToolStripMenuItem tsmiGroupedView;
 		private System.Windows.Forms.ToolStripMenuItem tsmiAlphabeticalSort;
@@ -615,7 +641,7 @@ namespace NppPluginNET
 		private System.Windows.Forms.ToolStripSeparator tssSession2;
 		private System.Windows.Forms.ToolStripSeparator tssSession1;
 		private System.Windows.Forms.ToolStripDropDownButton tsDdbtnView;
-		private System.Windows.Forms.ToolStripDropDownButton tsDdbtnSession;
+		internal System.Windows.Forms.ToolStripDropDownButton tsDdbtnSession;
 		private System.Windows.Forms.ToolStripMenuItem tsmiShowIcons;
 		private System.Windows.Forms.ToolStripDropDownButton tsDdbtnSettings;
 		private System.Windows.Forms.ToolStripMenuItem tsmiSignature;
@@ -639,5 +665,8 @@ namespace NppPluginNET
 		internal System.Windows.Forms.ToolStrip tsBar;
 		internal System.Windows.Forms.TreeView tvTags;
 		public System.Windows.Forms.ToolStripButton tsBtnClearSearchFilter;
+		private System.Windows.Forms.ToolStripMenuItem tsmiCollapseAll;
+		private System.Windows.Forms.ToolStripMenuItem tsmiExpandAll;
+		private System.Windows.Forms.ToolStripSeparator tssTv2;
 	}
 }

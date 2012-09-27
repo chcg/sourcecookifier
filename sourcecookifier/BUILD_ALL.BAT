@@ -1,0 +1,11 @@
+@ECHO OFF
+
+CALL SETUP_ENV.BAT
+
+CD ExuberantCtags
+CALL BUILD.BAT
+CD ..
+
+CD SourceCookifier
+CALL BUILD.BAT
+CD ..

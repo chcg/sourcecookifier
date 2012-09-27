@@ -1,0 +1,4 @@
+[DONE] implement ReturnType parsing for the other C-like languages (C#, Java, Vera)
+[TODO] implement ReturnType parsing for properties
+[DONE] fix PythonParser's scope nesting (parent type of a method's def is 'm' not 'f')
+[TODO] fix C#Parser's parsing when local variables are enabled (currently 'fully' disabled)

@@ -193,15 +193,23 @@ namespace NppPluginNET
         public string pszModuleName;    // const TCHAR*: it's the plugin file name. It's used to identify the plugin
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CommunicationInfo
+    {
+        public int internalMsg;
+        public IntPtr srcModuleName;
+        public IntPtr info;				// defined by plugin
+    }
+
     public enum LangType
     {
-        L_TXT, L_PHP , L_C, L_CPP, L_CS, L_OBJC, L_JAVA, L_RC,
-        L_HTML, L_XML, L_MAKEFILE, L_PASCAL, L_BATCH, L_INI, L_NFO, L_USER,
+        L_TEXT, L_PHP , L_C, L_CPP, L_CS, L_OBJC, L_JAVA, L_RC,
+        L_HTML, L_XML, L_MAKEFILE, L_PASCAL, L_BATCH, L_INI, L_ASCII, L_USER,
         L_ASP, L_SQL, L_VB, L_JS, L_CSS, L_PERL, L_PYTHON, L_LUA,
         L_TEX, L_FORTRAN, L_BASH, L_FLASH, L_NSIS, L_TCL, L_LISP, L_SCHEME,
         L_ASM, L_DIFF, L_PROPS, L_PS, L_RUBY, L_SMALLTALK, L_VHDL, L_KIX, L_AU3,
         L_CAML, L_ADA, L_VERILOG, L_MATLAB, L_HASKELL, L_INNO, L_SEARCHRESULT,
-        L_CMAKE, L_YAML, L_COBOL, L_GUI4CLI, L_D, L_POWERSHELL, L_R,
+        L_CMAKE, L_YAML, L_COBOL, L_GUI4CLI, L_D, L_POWERSHELL, L_R, L_JSP,
         // The end of enumated language type, so it should be always at the end
         L_EXTERNAL
     }
@@ -296,7 +304,7 @@ namespace NppPluginNET
         //BOOL NPPM_SWITCHTOFILE(0, TCHAR *filePathName2switch)
 
         NPPM_SAVECURRENTFILE = (NPPMSG + 38),
-        //BOOL WM_SWITCHTOFILE(0, 0)
+        //BOOL NPPM_SAVECURRENTFILE(0, 0)
 
         NPPM_SAVEALLFILES = (NPPMSG + 39),
         //BOOL NPPM_SAVEALLFILES(0, 0)
@@ -481,6 +489,28 @@ namespace NppPluginNET
         // BOOL NPPM_DOOPEN(0, const TCHAR *fullPathName2Open)
         // fullPathName2Open indicates the full file path name to be opened.
         // The return value is TRUE (1) if the operation is successful, otherwise FALSE (0).
+
+        NPPM_SAVECURRENTFILEAS = (NPPMSG + 78),
+        // BOOL NPPM_SAVECURRENTFILEAS (BOOL asCopy, const TCHAR* filename)
+
+        NPPM_GETCURRENTNATIVELANGENCODING = (NPPMSG + 79),
+        // INT NPPM_GETCURRENTNATIVELANGENCODING(0, 0)
+        // returned value : the current native language enconding
+
+        NPPM_ALLOCATESUPPORTED = (NPPMSG + 80),
+        // returns TRUE if NPPM_ALLOCATECMDID is supported
+        // Use to identify if subclassing is necessary
+
+        NPPM_ALLOCATECMDID = (NPPMSG + 81),
+        // BOOL NPPM_ALLOCATECMDID(int numberRequested, int* startNumber)
+        // sets startNumber to the initial command ID if successful
+        // Returns: TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful
+
+        NPPM_ALLOCATEMARKER = (NPPMSG + 82),
+        // BOOL NPPM_ALLOCATEMARKER(int numberRequested, int* startNumber)
+        // sets startNumber to the initial command ID if successful
+        // Allocates a marker number to a plugin
+        // Returns: TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful
 
         RUNCOMMAND_USER = (0x400/*WM_USER*/ + 3000),
         NPPM_GETFULLCURRENTPATH     = (RUNCOMMAND_USER + FULL_CURRENT_PATH),
@@ -669,6 +699,12 @@ namespace NppPluginNET
             IDM_EDIT_BLOCK_COMMENT               = (IDM_EDIT + 22),
             IDM_EDIT_STREAM_COMMENT              = (IDM_EDIT + 23),
             IDM_EDIT_TRIMTRAILING                = (IDM_EDIT + 24),
+            IDM_EDIT_TRIMLINEHEAD                = (IDM_EDIT + 42),
+            IDM_EDIT_TRIM_BOTH                   = (IDM_EDIT + 43),
+            IDM_EDIT_EOL2WS                      = (IDM_EDIT + 44),
+            IDM_EDIT_TRIMALL                     = (IDM_EDIT + 45),
+            IDM_EDIT_TAB2SW                      = (IDM_EDIT + 46),
+            IDM_EDIT_SW2TAB                      = (IDM_EDIT + 47),
             
         // Menu macro
             IDM_MACRO_SAVECURRENTMACRO           = (IDM_EDIT + 25),
@@ -745,10 +781,13 @@ namespace NppPluginNET
             IDM_SEARCH_GONEXTMARKER_DEF     = (IDM_SEARCH + 44),
 
             IDM_FOCUS_ON_FOUND_RESULTS      = (IDM_SEARCH + 45),
-            IDM_SEARCH_GOTONEXTFOUND           = (IDM_SEARCH + 46),
-            IDM_SEARCH_GOTOPREVFOUND           = (IDM_SEARCH + 47),
-    
-
+            IDM_SEARCH_GOTONEXTFOUND        = (IDM_SEARCH + 46),
+            IDM_SEARCH_GOTOPREVFOUND        = (IDM_SEARCH + 47),
+            
+            IDM_SEARCH_SETANDFINDNEXT       = (IDM_SEARCH + 48),
+            IDM_SEARCH_SETANDFINDPREV       = (IDM_SEARCH + 49),
+            IDM_SEARCH_INVERSEMARKS         = (IDM_SEARCH + 50),
+            
         IDM_VIEW    = (IDM + 4000),
             //IDM_VIEW_TOOLBAR_HIDE            = (IDM_VIEW + 1),
             IDM_VIEW_TOOLBAR_REDUCE            = (IDM_VIEW + 2),   
@@ -795,7 +834,11 @@ namespace NppPluginNET
             IDM_VIEW_DRAWTABBAR_VERTICAL       = (IDM_VIEW + 43),
             IDM_VIEW_DRAWTABBAR_MULTILINE      = (IDM_VIEW + 44),
             IDM_VIEW_DOCCHANGEMARGIN           = (IDM_VIEW + 45),
-
+            IDM_VIEW_LWDEF                     = (IDM_VIEW + 46),
+            IDM_VIEW_LWALIGN                   = (IDM_VIEW + 47),
+            IDM_VIEW_LWINDENT                  = (IDM_VIEW + 48),
+            IDM_VIEW_SUMMARY                   = (IDM_VIEW + 49),
+            
             IDM_VIEW_FOLD                      = (IDM_VIEW + 50),
                 IDM_VIEW_FOLD_1    = (IDM_VIEW_FOLD + 1),
                 IDM_VIEW_FOLD_2    = (IDM_VIEW_FOLD + 2),
@@ -889,6 +932,8 @@ namespace NppPluginNET
             IDM_FORMAT_KOI8U_CYRILLIC    = (IDM_FORMAT_ENCODE + 47),
             IDM_FORMAT_KOI8R_CYRILLIC    = (IDM_FORMAT_ENCODE + 48),
             IDM_FORMAT_ENCODE_END        = IDM_FORMAT_KOI8R_CYRILLIC,
+            
+            //#define    IDM_FORMAT_CONVERT            200
 
         IDM_LANG    = (IDM + 6000),
             IDM_LANGSTYLE_CONFIG_DLG    = (IDM_LANG + 1),
@@ -917,7 +962,7 @@ namespace NppPluginNET
             IDM_LANG_LUA                = (IDM_LANG + 24),
             IDM_LANG_TEX                = (IDM_LANG + 25),
             IDM_LANG_FORTRAN            = (IDM_LANG + 26),
-            IDM_LANG_SH                 = (IDM_LANG + 27),
+            IDM_LANG_BASH               = (IDM_LANG + 27),
             IDM_LANG_FLASH              = (IDM_LANG + 28),
             IDM_LANG_NSIS               = (IDM_LANG + 29),
             IDM_LANG_TCL                = (IDM_LANG + 30),
@@ -945,6 +990,7 @@ namespace NppPluginNET
             IDM_LANG_GUI4CLI            = (IDM_LANG + 52),
             IDM_LANG_POWERSHELL         = (IDM_LANG + 53),
             IDM_LANG_R                  = (IDM_LANG + 54),
+            IDM_LANG_JSP                = (IDM_LANG + 55),
 
             IDM_LANG_EXTERNAL           = (IDM_LANG + 65),
             IDM_LANG_EXTERNAL_LIMIT     = (IDM_LANG + 79),
@@ -976,6 +1022,9 @@ namespace NppPluginNET
             IDM_SETTING_REMEMBER_LAST_SESSION    = (IDM_SETTING + 10),
             IDM_SETTING_PREFERECE                = (IDM_SETTING + 11),
             IDM_SETTING_AUTOCNBCHAR              = (IDM_SETTING + 15),
+            IDM_SETTING_SHORTCUT_MAPPER_MACRO    = (IDM_SETTING + 16),
+            IDM_SETTING_SHORTCUT_MAPPER_RUN      = (IDM_SETTING + 17),
+            IDM_SETTING_EDITCONTEXTMENU          = (IDM_SETTING + 18),
 
         IDM_EXECUTE  = (IDM + 9000),
 
@@ -1054,7 +1103,7 @@ namespace NppPluginNET
         public int ch;                    /* SCN_CHARADDED, SCN_KEY */
         public int modifiers;            /* SCN_KEY */
         public int modificationType;    /* SCN_MODIFIED */
-        public string text;                /* SCN_MODIFIED, SCN_USERLISTSELECTION, SCN_AUTOCSELECTION */
+        public IntPtr text;                /* SCN_MODIFIED, SCN_USERLISTSELECTION, SCN_AUTOCSELECTION */
         public int length;                /* SCN_MODIFIED */
         public int linesAdded;            /* SCN_MODIFIED */
         public int message;                /* SCN_MACRORECORD */
@@ -2036,8 +2085,6 @@ namespace NppPluginNET
         public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         [DllImport("user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lParam);
 
         [DllImport("user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, int wParam, IntPtr lParam);
@@ -2069,6 +2116,17 @@ namespace NppPluginNET
 
         [DllImport("kernel32")]
         public static extern void OutputDebugString(string lpOutputString);
+
+        public const int GWL_WNDPROC = -4;
+        public const int WM_LBUTTONUP = 0x0202;
+        //public const int WM_KEYDOWN = 0x0100;
+        public delegate int WindowProc(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImport("user32")]
+        public static extern IntPtr SetWindowLongW(IntPtr hWnd, int nIndex, WindowProc newProc);
+        [DllImport("user32")]
+        public static extern IntPtr SetWindowLongW(IntPtr hWnd, int nIndex, IntPtr newProc);
+        [DllImport("user32")]
+        public static extern int CallWindowProcW(IntPtr lpPrevWndFunc, IntPtr hWnd, int Msg, int wParam, int lParam);
     }
 
     public class ClikeStringArray : IDisposable

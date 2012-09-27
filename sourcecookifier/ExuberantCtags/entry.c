@@ -835,6 +835,7 @@ extern void makeTagEntry (const tagEntryInfo *const tag)
 
 		++TagFile.numTags.added;
 		rememberMaxLengths (strlen (tag->name), (size_t) length);
+		numTagsWritten++;
 		DebugStatement ( fflush (TagFile.fp); )
 	}
 }

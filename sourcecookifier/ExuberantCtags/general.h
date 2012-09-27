@@ -122,6 +122,8 @@ extern void *unlink (const char *);
 extern char *getenv (const char *);
 #endif
 
+unsigned int numTagsWritten;
+
 #endif  /* _GENERAL_H */
 
 /* vi:set tabstop=4 shiftwidth=4: */
