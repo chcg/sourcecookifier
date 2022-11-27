@@ -1,0 +1,17 @@
+.vs
+obj
+/sourcecookifier/SourceCookifier/*.user
+/Notepad++/autoCompletion
+/Notepad++/functionList
+/Notepad++/localization
+/Notepad++/themes
+/Notepad++/updater
+/Notepad++/userDefineLangs
+/Notepad++/backup
+/Notepad++/plugins
+/Notepad++/change.log
+/Notepad++/langs.model.xml
+/Notepad++/nppLogNulContentCorruptionIssue.xml
+/Notepad++/stylers.model.xml
+/Notepad++/langs.xml
+/Notepad++/stylers.xml
