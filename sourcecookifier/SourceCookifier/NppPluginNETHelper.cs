@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Text;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
 
 namespace NppPluginNET
 {
@@ -75,17 +75,17 @@ namespace NppPluginNET
                 RtlMoveMemory(newPointer, _nativePointer, oldSize);
                 Marshal.FreeHGlobal(_nativePointer);
             }
-            IntPtr ptrPosNewItem = (IntPtr)((int)newPointer + oldSize);
+            IntPtr ptrPosNewItem = (IntPtr)((long)newPointer + oldSize);
             byte[] aB = Encoding.Unicode.GetBytes(funcItem._itemName + "\0");
             Marshal.Copy(aB, 0, ptrPosNewItem, aB.Length);
-            ptrPosNewItem = (IntPtr)((int)ptrPosNewItem + 128);
+            ptrPosNewItem = (IntPtr)((long)ptrPosNewItem + 128);
             IntPtr p = (funcItem._pFunc != null) ? Marshal.GetFunctionPointerForDelegate(funcItem._pFunc) : IntPtr.Zero;
             Marshal.WriteIntPtr(ptrPosNewItem, p);
-            ptrPosNewItem = (IntPtr)((int)ptrPosNewItem + IntPtr.Size);
+            ptrPosNewItem = (IntPtr)((long)ptrPosNewItem + IntPtr.Size);
             Marshal.WriteInt32(ptrPosNewItem, funcItem._cmdID);
-            ptrPosNewItem = (IntPtr)((int)ptrPosNewItem + 4);
+            ptrPosNewItem = (IntPtr)((long)ptrPosNewItem + 4);
             Marshal.WriteInt32(ptrPosNewItem, Convert.ToInt32(funcItem._init2Check));
-            ptrPosNewItem = (IntPtr)((int)ptrPosNewItem + 4);
+            ptrPosNewItem = (IntPtr)((long)ptrPosNewItem + 4);
             if (funcItem._pShKey._key != 0)
             {
                 IntPtr newShortCutKey = Marshal.AllocHGlobal(4);
@@ -104,15 +104,15 @@ namespace NppPluginNET
             {
                 FuncItem updatedItem = new FuncItem();
                 updatedItem._itemName = _funcItems[i]._itemName;
-                ptrPosItem = (IntPtr)((int)ptrPosItem + 128);
+                ptrPosItem = (IntPtr)((long)ptrPosItem + 128);
                 updatedItem._pFunc = _funcItems[i]._pFunc;
-                ptrPosItem = (IntPtr)((int)ptrPosItem + IntPtr.Size);
+                ptrPosItem = (IntPtr)((long)ptrPosItem + IntPtr.Size);
                 updatedItem._cmdID = Marshal.ReadInt32(ptrPosItem);
-                ptrPosItem = (IntPtr)((int)ptrPosItem + 4);
+                ptrPosItem = (IntPtr)((long)ptrPosItem + 4);
                 updatedItem._init2Check = _funcItems[i]._init2Check;
-                ptrPosItem = (IntPtr)((int)ptrPosItem + 4);
+                ptrPosItem = (IntPtr)((long)ptrPosItem + 4);
                 updatedItem._pShKey = _funcItems[i]._pShKey;
-                ptrPosItem = (IntPtr)((int)ptrPosItem + IntPtr.Size);
+                ptrPosItem = (IntPtr)((long)ptrPosItem + IntPtr.Size);
 
                 _funcItems[i] = updatedItem;
             }
@@ -210,8 +210,15 @@ namespace NppPluginNET
         L_ASM, L_DIFF, L_PROPS, L_PS, L_RUBY, L_SMALLTALK, L_VHDL, L_KIX, L_AU3,
         L_CAML, L_ADA, L_VERILOG, L_MATLAB, L_HASKELL, L_INNO, L_SEARCHRESULT,
         L_CMAKE, L_YAML, L_COBOL, L_GUI4CLI, L_D, L_POWERSHELL, L_R, L_JSP,
+        L_COFFEESCRIPT,
         // The end of enumated language type, so it should be always at the end
         L_EXTERNAL
+    }
+
+    public enum winVer
+    {
+        WV_UNKNOWN, WV_WIN32S, WV_95, WV_98, WV_ME, WV_NT, WV_W2K,
+        WV_XP, WV_S2003, WV_XPX64, WV_VISTA, WV_WIN7, WV_WIN8, WV_WIN81
     }
 
     [Flags]
@@ -266,6 +273,9 @@ namespace NppPluginNET
 
         NPPM_GETMENUHANDLE = (NPPMSG + 25),
             NPPPLUGINMENU = 0,
+            NPPMAINMENU = 1,
+        // INT NPPM_GETMENUHANDLE(INT menuChoice, 0)
+        // Return: menu handle (HMENU) of choice (plugin menu handle or Notepad++ main menu handle)
 
         NPPM_ENCODESCI = (NPPMSG + 26),
         //ascii file to unicode
@@ -375,6 +385,7 @@ namespace NppPluginNET
         NPPM_GETPOSFROMBUFFERID = (NPPMSG + 57),
         // INT NPPM_GETPOSFROMBUFFERID(INT bufferID, 0)
         // Return VIEW|INDEX from a buffer ID. -1 if the bufferID non existing
+        // if priorityView set to SUB_VIEW, then SUB_VIEW will be search firstly
         //
         // VIEW takes 2 highest bits and INDEX (0 based) takes the rest (30 bits) 
         // Here's the values for the view :
@@ -389,25 +400,30 @@ namespace NppPluginNET
         // allocate fullFilePath with the return values + 1, then call it again to get  full path file name
 
         NPPM_GETBUFFERIDFROMPOS = (NPPMSG + 59),
+        // INT NPPM_GETBUFFERIDFROMPOS(INT index, INT iView)
         //wParam: Position of document
         //lParam: View to use, 0 = Main, 1 = Secondary
         //Returns 0 if invalid
 
         NPPM_GETCURRENTBUFFERID = (NPPMSG + 60),
+        // INT NPPM_GETCURRENTBUFFERID(0, 0)
         //Returns active Buffer
 
         NPPM_RELOADBUFFERID = (NPPMSG + 61),
+        // VOID NPPM_RELOADBUFFERID(0, 0)
         //Reloads Buffer
         //wParam: Buffer to reload
         //lParam: 0 if no alert, else alert
 
 
         NPPM_GETBUFFERLANGTYPE = (NPPMSG + 64),
+        // INT NPPM_GETBUFFERLANGTYPE(INT bufferID, 0)
         //wParam: BufferID to get LangType from
         //lParam: 0
         //Returns as int, see LangType. -1 on error
 
         NPPM_SETBUFFERLANGTYPE = (NPPMSG + 65),
+        // BOOL NPPM_SETBUFFERLANGTYPE(INT bufferID, INT langType)
         //wParam: BufferID to set LangType of
         //lParam: LangType
         //Returns TRUE on success, FALSE otherwise
@@ -415,11 +431,13 @@ namespace NppPluginNET
         //L_USER and L_EXTERNAL are not supported
 
         NPPM_GETBUFFERENCODING = (NPPMSG + 66),
+        // INT NPPM_GETBUFFERENCODING(INT bufferID, 0)
         //wParam: BufferID to get encoding from
         //lParam: 0
         //returns as int, see UniMode. -1 on error
 
         NPPM_SETBUFFERENCODING = (NPPMSG + 67),
+        // BOOL NPPM_SETBUFFERENCODING(INT bufferID, INT encoding)
         //wParam: BufferID to set encoding of
         //lParam: format
         //Returns TRUE on success, FALSE otherwise
@@ -427,11 +445,13 @@ namespace NppPluginNET
         //Can only be done on new, unedited files
 
         NPPM_GETBUFFERFORMAT = (NPPMSG + 68),
+        // INT NPPM_GETBUFFERFORMAT(INT bufferID, 0)
         //wParam: BufferID to get format from
         //lParam: 0
         //returns as int, see formatType. -1 on error
 
         NPPM_SETBUFFERFORMAT = (NPPMSG + 69),
+        // BOOL NPPM_SETBUFFERFORMAT(INT bufferID, INT format)
         //wParam: BufferID to set format of
         //lParam: format
         //Returns TRUE on success, FALSE otherwise
@@ -511,6 +531,51 @@ namespace NppPluginNET
         // sets startNumber to the initial command ID if successful
         // Allocates a marker number to a plugin
         // Returns: TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful
+
+        NPPM_GETLANGUAGENAME = (NPPMSG + 83),
+        // INT NPPM_GETLANGUAGENAME(int langType, TCHAR *langName)
+        // Get programing language name from the given language type (LangType)
+        // Return value is the number of copied character / number of character to copy (\0 is not included)
+        // You should call this function 2 times - the first time you pass langName as NULL to get the number of characters to copy.
+        // You allocate a buffer of the length of (the number of characters + 1) then call NPPM_GETLANGUAGENAME function the 2nd time 
+        // by passing allocated buffer as argument langName
+
+        NPPM_GETLANGUAGEDESC = (NPPMSG + 84),
+        // INT NPPM_GETLANGUAGEDESC(int langType, TCHAR *langDesc)
+        // Get programing language short description from the given language type (LangType)
+        // Return value is the number of copied character / number of character to copy (\0 is not included)
+        // You should call this function 2 times - the first time you pass langDesc as NULL to get the number of characters to copy.
+        // You allocate a buffer of the length of (the number of characters + 1) then call NPPM_GETLANGUAGEDESC function the 2nd time 
+        // by passing allocated buffer as argument langDesc
+
+        NPPM_SHOWDOCSWITCHER = (NPPMSG + 85),
+        // VOID NPPM_ISDOCSWITCHERSHOWN(0, BOOL toShowOrNot)
+        // Send this message to show or hide doc switcher.
+        // if toShowOrNot is TRUE then show doc switcher, otherwise hide it.
+
+        NPPM_ISDOCSWITCHERSHOWN = (NPPMSG + 86),
+        // BOOL NPPM_ISDOCSWITCHERSHOWN(0, 0)
+        // Check to see if doc switcher is shown.
+
+        NPPM_GETAPPDATAPLUGINSALLOWED = (NPPMSG + 87),
+        // BOOL NPPM_GETAPPDATAPLUGINSALLOWED(0, 0)
+        // Check to see if loading plugins from "%APPDATA%\Notepad++\plugins" is allowed.
+
+        NPPM_GETCURRENTVIEW = (NPPMSG + 88),
+        // INT NPPM_GETCURRENTVIEW(0, 0)
+        // Return: current edit view of Notepad++. Only 2 possible values: 0 = Main, 1 = Secondary
+
+        NPPM_DOCSWITCHERDISABLECOLUMN = (NPPMSG + 89),
+        // VOID NPPM_DOCSWITCHERDISABLECOLUMN(0, BOOL disableOrNot)
+        // Disable or enable extension column of doc switcher
+
+        NPPM_GETEDITORDEFAULTFOREGROUNDCOLOR = (NPPMSG + 90),
+        // INT NPPM_GETEDITORDEFAULTFOREGROUNDCOLOR(0, 0)
+        // Return: current editor default foreground color. You should convert the returned value in COLORREF
+
+        NPPM_GETEDITORDEFAULTBACKGROUNDCOLOR = (NPPMSG + 91),
+        // INT NPPM_GETEDITORDEFAULTBACKGROUNDCOLOR(0, 0)
+        // Return: current editor default background color. You should convert the returned value in COLORREF
 
         RUNCOMMAND_USER = (0x400/*WM_USER*/ + 3000),
         NPPM_GETFULLCURRENTPATH     = (RUNCOMMAND_USER + FULL_CURRENT_PATH),
@@ -637,9 +702,14 @@ namespace NppPluginNET
             DOCSTAUS_READONLY = 1,
             DOCSTAUS_BUFFERDIRTY = 2,
 
-        NPPN_DOCORDERCHANGED = (NPPN_FIRST + 16)  // To notify plugins that document order is changed
+        NPPN_DOCORDERCHANGED = (NPPN_FIRST + 16),  // To notify plugins that document order is changed
         //scnNotification->nmhdr.code = NPPN_DOCORDERCHANGED;
         //scnNotification->nmhdr.hwndFrom = newIndex;
+        //scnNotification->nmhdr.idFrom = BufferID;
+
+        NPPN_SNAPSHOTDIRTYFILELOADED = (NPPN_FIRST + 18),  // To notify plugins that a snapshot dirty file is loaded on startup
+        //scnNotification->nmhdr.code = NPPN_SNAPSHOTDIRTYFILELOADED;
+        //scnNotification->nmhdr.hwndFrom = NULL;
         //scnNotification->nmhdr.idFrom = BufferID;
     }
 
@@ -1091,7 +1161,7 @@ namespace NppPluginNET
          * hwndFrom is really an environment specific window handle or pointer
          * but most clients of Scintilla.h do not have this type visible. */
         public IntPtr hwndFrom;
-        public uint idFrom;
+        public IntPtr idFrom;
         public uint code;
     }
 
@@ -1099,17 +1169,17 @@ namespace NppPluginNET
     public struct SCNotification
     {
         public Sci_NotifyHeader nmhdr;
-        public int position;            /* SCN_STYLENEEDED, SCN_MODIFIED, SCN_DWELLSTART, SCN_DWELLEND */
+        public IntPtr position;            /* SCN_STYLENEEDED, SCN_MODIFIED, SCN_DWELLSTART, SCN_DWELLEND */
         public int ch;                    /* SCN_CHARADDED, SCN_KEY */
         public int modifiers;            /* SCN_KEY */
         public int modificationType;    /* SCN_MODIFIED */
         public IntPtr text;                /* SCN_MODIFIED, SCN_USERLISTSELECTION, SCN_AUTOCSELECTION */
-        public int length;                /* SCN_MODIFIED */
-        public int linesAdded;            /* SCN_MODIFIED */
+        public IntPtr length;                /* SCN_MODIFIED */
+        public IntPtr linesAdded;            /* SCN_MODIFIED */
         public int message;                /* SCN_MACRORECORD */
-        public uint wParam;                /* SCN_MACRORECORD */
-        public int lParam;                /* SCN_MACRORECORD */
-        public int line;                /* SCN_MODIFIED */
+        public IntPtr wParam;                /* SCN_MACRORECORD */
+        public IntPtr lParam;                /* SCN_MACRORECORD */
+        public IntPtr line;                /* SCN_MODIFIED */
         public int foldLevelNow;        /* SCN_MODIFIED */
         public int foldLevelPrev;        /* SCN_MODIFIED */
         public int margin;                /* SCN_MARGINCLICK */
@@ -1117,7 +1187,10 @@ namespace NppPluginNET
         public int x;                    /* SCN_DWELLSTART, SCN_DWELLEND */
         public int y;                    /* SCN_DWELLSTART, SCN_DWELLEND */
         public int token;                /* SCN_MODIFIED with SC_MOD_CONTAINER */
-        public int annotationLinesAdded;/* SC_MOD_CHANGEANNOTATION */
+        public IntPtr annotationLinesAdded;/* SC_MOD_CHANGEANNOTATION */
+        public int updated;    /* SCN_UPDATEUI */
+        public int listCompletionMethod; /* SCN_AUTOCSELECTION, SCN_AUTOCCOMPLETED, SCN_USERLISTSELECTION, */
+        public int characterSource;    /* SCN_CHARADDED */
     }
 
     [Flags]
@@ -2068,32 +2141,34 @@ namespace NppPluginNET
     public class Win32
     {
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, NppMenuCmd lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, long wParam, long lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, int lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, long wParam, IntPtr lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, out int lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, long lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, int lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, out IntPtr lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, ref LangType lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, ref LangType lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, long wParam, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lParam);
         [DllImport("user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        [DllImport("user32")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, NppMsg Msg, long wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, int wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, long wParam, long lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, int wParam, string lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, int wParam, [MarshalAs(UnmanagedType.LPStr)] StringBuilder lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, IntPtr wParam, string lParam);
         [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, int wParam, int lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPStr)] StringBuilder lParam);
 
         public const int MAX_PATH = 260;
         [DllImport("kernel32")]
@@ -2118,21 +2193,22 @@ namespace NppPluginNET
         public static extern void OutputDebugString(string lpOutputString);
 
         public const int GWL_WNDPROC = -4;
-        public const int WM_LBUTTONUP = 0x0202;
+        public const long WM_LBUTTONUP = 0x0202;
         //public const int WM_KEYDOWN = 0x0100;
-        public delegate int WindowProc(IntPtr hWnd, int Msg, int wParam, int lParam);
+        public delegate long WindowProc(IntPtr hWnd, uint Msg, long wParam, long lParam);
         [DllImport("user32")]
-        public static extern IntPtr SetWindowLongW(IntPtr hWnd, int nIndex, WindowProc newProc);
+        public static extern IntPtr SetWindowLongPtrW(IntPtr hWnd, int nIndex, WindowProc newProc);
         [DllImport("user32")]
-        public static extern IntPtr SetWindowLongW(IntPtr hWnd, int nIndex, IntPtr newProc);
+        public static extern IntPtr SetWindowLongPtrW(IntPtr hWnd, int nIndex, IntPtr newProc);
         [DllImport("user32")]
-        public static extern int CallWindowProcW(IntPtr lpPrevWndFunc, IntPtr hWnd, int Msg, int wParam, int lParam);
+        public static extern long CallWindowProcW(IntPtr lpPrevWndFunc, IntPtr hWnd, long Msg, long wParam, long lParam);
     }
 
     public class ClikeStringArray : IDisposable
     {
         IntPtr _nativeArray;
         List<IntPtr> _nativeItems;
+        public bool AutoDispose = false;
         bool _disposed = false;
 
         public ClikeStringArray(int num, int stringCapacity)
@@ -2142,10 +2218,11 @@ namespace NppPluginNET
             for (int i = 0; i < num; i++)
             {
                 IntPtr item = Marshal.AllocHGlobal(stringCapacity);
-                Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (i * IntPtr.Size)), item);
+                Marshal.WriteIntPtr((IntPtr)((long)_nativeArray + (i * IntPtr.Size)), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (num * IntPtr.Size)), IntPtr.Zero);
+            Marshal.WriteIntPtr((IntPtr)((long)_nativeArray + (num * IntPtr.Size)), IntPtr.Zero);
+            AutoDispose = true;
         }
         public ClikeStringArray(List<string> lstStrings)
         {
@@ -2154,10 +2231,23 @@ namespace NppPluginNET
             for (int i = 0; i < lstStrings.Count; i++)
             {
                 IntPtr item = Marshal.StringToHGlobalUni(lstStrings[i]);
-                Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (i * IntPtr.Size)), item);
+                Marshal.WriteIntPtr((IntPtr)((long)_nativeArray + (i * IntPtr.Size)), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (lstStrings.Count * IntPtr.Size)), IntPtr.Zero);
+            Marshal.WriteIntPtr((IntPtr)((long)_nativeArray + (lstStrings.Count * IntPtr.Size)), IntPtr.Zero);
+            AutoDispose = true;
+        }
+        public ClikeStringArray(IntPtr nativeArray)
+        {
+            _nativeArray = nativeArray;
+            _nativeItems = new List<IntPtr>();
+            IntPtr ptr = Marshal.ReadIntPtr(_nativeArray);
+            while (ptr != IntPtr.Zero)
+            {
+                _nativeItems.Add(ptr);
+                ptr = Marshal.ReadIntPtr(_nativeArray, _nativeItems.Count * IntPtr.Size);
+            }
+            AutoDispose = false;
         }
 
         public IntPtr NativePointer { get { return _nativeArray; } }
@@ -2176,7 +2266,7 @@ namespace NppPluginNET
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (AutoDispose && !_disposed)
             {
                 for (int i = 0; i < _nativeItems.Count; i++)
                     if (_nativeItems[i] != IntPtr.Zero) Marshal.FreeHGlobal(_nativeItems[i]);

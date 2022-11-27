@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 
 namespace SourceCookifier
 {
@@ -14,8 +12,8 @@ namespace SourceCookifier
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey), typeof(TKey).GetNestedTypes());
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue), typeof(TValue).GetNestedTypes());
 
             bool wasEmpty = reader.IsEmptyElement;
             reader.Read();
@@ -43,9 +41,9 @@ namespace SourceCookifier
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
- 
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey), typeof(TKey).GetNestedTypes());
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue), typeof(TValue).GetNestedTypes());
+
             foreach (TKey key in this.Keys)
             {
                 writer.WriteStartElement("item");

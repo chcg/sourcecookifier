@@ -37,9 +37,9 @@ namespace NppPluginNET
 
         internal static IntPtr GetCurrentScintilla()
         {
-            int curScintilla;
-            Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_GETCURRENTSCINTILLA, 0, out curScintilla);
-            return (curScintilla == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+            IntPtr curScintilla;
+            Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_GETCURRENTSCINTILLA, IntPtr.Zero, out curScintilla);
+            return (curScintilla == IntPtr.Zero) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
         }
         #endregion
     }

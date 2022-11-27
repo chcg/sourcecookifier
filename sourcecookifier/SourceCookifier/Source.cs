@@ -717,7 +717,6 @@ namespace SourceCookifier
             Signature = info.GetString("Signature");
             Access = info.GetString("Access");
             ReturnType = info.GetString("ReturnType");
-            base.ToolTipText = info.GetString("ToolTipText");
         }
         protected override void Serialize(SerializationInfo info, StreamingContext context)
         {
@@ -732,7 +731,6 @@ namespace SourceCookifier
             info.AddValue("Signature", Signature);
             info.AddValue("Access", Access);
             info.AddValue("ReturnType", ReturnType);
-            info.AddValue("ToolTipText", base.ToolTipText);
             base.Serialize(info, context);
         }
     }
@@ -797,7 +795,6 @@ namespace SourceCookifier
         {
             Error = info.GetString("Error");
             SourceFile = info.GetString("SourceFile");
-            ToolTipText = info.GetString("ToolTipText");
             Extension = info.GetString("Extension");
             Language = info.GetString("Language");
             ScopeOperator = info.GetString("ScopeOperator");
@@ -806,7 +803,6 @@ namespace SourceCookifier
         {
             info.AddValue("Error", Error);
             info.AddValue("SourceFile", SourceFile);
-            info.AddValue("ToolTipText", ToolTipText);
             info.AddValue("Extension", Extension);
             info.AddValue("Language", Language);
             info.AddValue("ScopeOperator", ScopeOperator);

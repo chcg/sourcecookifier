@@ -221,7 +221,7 @@ namespace SourceCookifier
         {
             Main.TRACE("-START-");
             if (sourceObject == null) return;
-            XmlSerializer serializer = new XmlSerializer(sourceObject.GetType());
+            XmlSerializer serializer = new XmlSerializer(sourceObject.GetType(), sourceObject.GetType().GetNestedTypes());
             TextWriter writer = new StreamWriter(targetPath);
             serializer.Serialize(writer, sourceObject);
             Main.TRACE(string.Format("Serialized {0}", targetPath));
@@ -232,7 +232,7 @@ namespace SourceCookifier
         {
             Main.TRACE("-START-");
             object ret = null;
-            XmlSerializer serializer = new XmlSerializer(targetType);
+            XmlSerializer serializer = new XmlSerializer(targetType, targetType.GetNestedTypes());
             using (TextReader reader = new StreamReader(sourcePath))
             {
                 XmlReader xr = new XmlTextReader(reader);

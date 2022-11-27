@@ -51,7 +51,7 @@ namespace SourceCookifier
             {
                 // HACK: allow loading of session files created with older assembly versions
                 Assembly asm = typeof(Main).Assembly;
-                if (args.Name.Contains("SourceCookifier, Version=") && (args.Name != asm.FullName))
+                if (args.Name.Contains("SourceCookifier, Version="))
                     return typeof(Main).Assembly;
             }
             return null;
@@ -61,10 +61,11 @@ namespace SourceCookifier
             TRACE("-START-");
             try
             {
-                StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-                Settings.ConfigDir = sbIniFilePath.ToString();
+                StringBuilder sbPluginConfigDir = new StringBuilder(Win32.MAX_PATH);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbPluginConfigDir);
+                Settings.ConfigDir = sbPluginConfigDir.ToString();
                 TRACE("nppConfigFolder=" + Settings.ConfigDir);
+                Settings.ConfigDir = Path.Combine(Settings.ConfigDir, "SourceCookifier");
                 if (!Directory.Exists(Settings.ConfigDir)) Directory.CreateDirectory(Settings.ConfigDir);
                 Settings.logFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".errorlog.txt");
                 Settings.configSettingsFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".config.xml");
@@ -323,7 +324,7 @@ namespace SourceCookifier
                         {
                             string currentSourceFile = "";
                             StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-                            if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, sbPath) == 1)
+                            if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, sbPath) == 1)
                                 currentSourceFile = sbPath.ToString();
 
                             if (cmsDefinitions == null)
@@ -407,10 +408,10 @@ namespace SourceCookifier
                             }
 
                             IntPtr curSci = PluginBase.GetCurrentScintilla();
-                            int currentPos = (int)Win32.SendMessage(curSci, SciMsg.SCI_GETCURRENTPOS, 0, 0);
+                            long currentPos = (long)Win32.SendMessage(curSci, SciMsg.SCI_GETCURRENTPOS, 0, 0);
                             Point pt = new Point();
-                            pt.X = (int)Win32.SendMessage(curSci, SciMsg.SCI_POINTXFROMPOSITION, 0, currentPos);
-                            pt.Y = (int)Win32.SendMessage(curSci, SciMsg.SCI_POINTYFROMPOSITION, 0, currentPos);
+                            pt.X = (int)(long)Win32.SendMessage(curSci, SciMsg.SCI_POINTXFROMPOSITION, 0, currentPos);
+                            pt.Y = (int)(long)Win32.SendMessage(curSci, SciMsg.SCI_POINTYFROMPOSITION, 0, currentPos);
                             Win32.ClientToScreen(curSci, ref pt);
                             TRACE(string.Format("Showing cmsDefinitions menu at X={0} Y={1}", pt.X, pt.Y));
                             cmsDefinitions.Show(pt);
@@ -456,7 +457,7 @@ namespace SourceCookifier
             TRACE("-START-");
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
             StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-            if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, sbPath) == 1)
+            if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, sbPath) == 1)
             {
                 Jump jumpNewPos = new Jump();
                 jumpNewPos.FilePath = source;
@@ -465,7 +466,7 @@ namespace SourceCookifier
                 jumpOldPos.FilePath = sbPath.ToString();
                 if ((jumpOldPos.FilePath != "") && File.Exists(jumpOldPos.FilePath))
                 {
-                    jumpOldPos.Line = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0) + 1;
+                    jumpOldPos.Line = (int)(long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0) + 1;
                     while (((jumpStack.Count) > jumpPos)
                             || (((jumpStack.Count > 0))
                                 && (jumpStack.Peek().FilePath == jumpOldPos.FilePath)
@@ -488,8 +489,8 @@ namespace SourceCookifier
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, source);
 
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
-            int currentPos = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);
-            int currentLine = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINEFROMPOSITION, currentPos, 0);
+            long currentPos = (long)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);
+            long currentLine = (long)Win32.SendMessage(curScintilla, SciMsg.SCI_LINEFROMPOSITION, currentPos, 0);
             if ((line != 1) && (line - 1 != currentLine))
             {
                 Win32.SendMessage(curScintilla, SciMsg.SCI_DOCUMENTEND, 0, 0);
@@ -737,42 +738,42 @@ namespace SourceCookifier
         {
             if (oldMainWndProc == IntPtr.Zero)
             {
-                oldMainWndProc = Win32.SetWindowLongW(PluginBase.nppData._scintillaMainHandle, Win32.GWL_WNDPROC, newMainWndProc);
+                oldMainWndProc = Win32.SetWindowLongPtrW(PluginBase.nppData._scintillaMainHandle, Win32.GWL_WNDPROC, newMainWndProc);
             }
             if (oldSecondWndProc == IntPtr.Zero)
             {
-                oldSecondWndProc = Win32.SetWindowLongW(PluginBase.nppData._scintillaSecondHandle, Win32.GWL_WNDPROC, newSecondWndProc);
+                oldSecondWndProc = Win32.SetWindowLongPtrW(PluginBase.nppData._scintillaSecondHandle, Win32.GWL_WNDPROC, newSecondWndProc);
             }
         }
         internal static void UnSubClassNpp()
         {
             if (oldMainWndProc != IntPtr.Zero)
             {
-                Win32.SetWindowLongW(PluginBase.nppData._scintillaMainHandle, Win32.GWL_WNDPROC, oldMainWndProc);
+                Win32.SetWindowLongPtrW(PluginBase.nppData._scintillaMainHandle, Win32.GWL_WNDPROC, oldMainWndProc);
                 oldMainWndProc = IntPtr.Zero;
             }
             if (oldSecondWndProc != IntPtr.Zero)
             {
-                Win32.SetWindowLongW(PluginBase.nppData._scintillaSecondHandle, Win32.GWL_WNDPROC, oldSecondWndProc);
+                Win32.SetWindowLongPtrW(PluginBase.nppData._scintillaSecondHandle, Win32.GWL_WNDPROC, oldSecondWndProc);
                 oldSecondWndProc = IntPtr.Zero;
             }
         }
-        internal static int MainWndProc(IntPtr hWnd, int Msg, int wParam, int lParam)
+        internal static long MainWndProc(IntPtr hWnd, uint Msg, long wParam, long lParam)
         {
             return CommonWndProc(oldMainWndProc, hWnd, Msg, wParam, lParam);
         }
-        internal static int SecondWndProc(IntPtr hWnd, int Msg, int wParam, int lParam)
+        internal static long SecondWndProc(IntPtr hWnd, uint Msg, long wParam, long lParam)
         {
             return CommonWndProc(oldSecondWndProc, hWnd, Msg, wParam, lParam);
         }
-        internal static int CommonWndProc(IntPtr oldWndProc, IntPtr hWnd, int Msg, int wParam, int lParam)
+        internal static long CommonWndProc(IntPtr oldWndProc, IntPtr hWnd, long Msg, long wParam, long lParam)
         {
             switch (Msg)
             {
                 case Win32.WM_LBUTTONUP:
                     if (Control.ModifierKeys == Keys.Control)
                     {
-                        int res = Win32.CallWindowProcW(oldWndProc, hWnd, Msg, wParam, lParam);
+                        long res = Win32.CallWindowProcW(oldWndProc, hWnd, Msg, wParam, lParam);
                         GoToDefinition();
                         return res;
                     }

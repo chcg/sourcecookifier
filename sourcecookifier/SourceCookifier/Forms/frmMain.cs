@@ -1,16 +1,12 @@
-﻿using System;
+﻿using NppPluginNET;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using NppPluginNET;
 
 namespace SourceCookifier
 {
@@ -898,12 +894,12 @@ namespace SourceCookifier
                     clrBar = Color.FromArgb(clrBar.A, Math.Max(0, clrBar.R - 30), Math.Max(0, clrBar.G - 15), clrBar.B);
                 }
                 tsBar.BackColor = clrBar;
-                int pCaption = Marshal.ReadInt32(Main._ptrNppTbData, 4);
+                IntPtr pCaption = Marshal.ReadIntPtr(Main._ptrNppTbData, IntPtr.Size);
                 byte[] newCaption = new System.Text.UnicodeEncoding().GetBytes(caption);
                 int p = 0;
                 for (; p < newCaption.Length; p++)
-                    Marshal.WriteByte((IntPtr)(pCaption + p), newCaption[p]);
-                Marshal.WriteInt16((IntPtr)(pCaption + p), 0);
+                    Marshal.WriteByte((pCaption + p), newCaption[p]);
+                Marshal.WriteInt16((pCaption + p), 0);
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMUPDATEDISPINFO, 0, Handle);
                 Main.TRACE(string.Format("New caption={0}", caption));
             }
@@ -1009,9 +1005,9 @@ namespace SourceCookifier
         public void DoCurrentSciBufferTags()
         {
             Main.TRACE("-START-");
-            int bufID = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
+            long bufID = (long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
             StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-            if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, path) != -1)
+            if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, path) != -1)
             {
                 tvTags.Nodes.Clear();
                 if (File.Exists(path.ToString()))
@@ -1024,8 +1020,8 @@ namespace SourceCookifier
         public void DoAllOpenedDocuments()
         {
             Main.TRACE("-START-");
-            int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
-            using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
+            long nbFile = (long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
+            using (ClikeStringArray cStrArray = new ClikeStringArray((int)nbFile, Win32.MAX_PATH))
             {
                 if (Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
                 {
@@ -1215,8 +1211,8 @@ namespace SourceCookifier
                             {
                                 bool _found = false;
                                 List<string> lstOpenFiles = new List<string>();
-                                int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
-                                using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
+                                long nbFile = (long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
+                                using (ClikeStringArray cStrArray = new ClikeStringArray((int)nbFile, Win32.MAX_PATH))
                                 {
                                     if (Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
                                         foreach (string _file in cStrArray.ManagedStringsUnicode)
@@ -1613,16 +1609,16 @@ namespace SourceCookifier
             }
             Refresh();
         }
-        
-        int currentLine = -1;
+
+        long currentLine = -1;
         public bool SkipSelectTagNodeByCurrentLine = false;
         public void SelectTagNodeByCurrentLine(bool ignoreOldLine)
         {
             Main.TRACE("-START-");
 
             IntPtr curSci = PluginBase.GetCurrentScintilla();
-            int pos = (int)Win32.SendMessage(curSci, SciMsg.SCI_GETCURRENTPOS, 0, 0);
-            int line = (int)Win32.SendMessage(curSci, SciMsg.SCI_LINEFROMPOSITION, pos, 0);
+            long pos = (long)Win32.SendMessage(curSci, SciMsg.SCI_GETCURRENTPOS, 0, 0);
+            long line = (long)Win32.SendMessage(curSci, SciMsg.SCI_LINEFROMPOSITION, pos, 0);
             if (!ignoreOldLine && (line == currentLine)) return;
             currentLine = line;
             line++;
@@ -1639,9 +1635,9 @@ namespace SourceCookifier
                 TreeNode sourceNode = null;
                 if (Settings.Configs.SessionMode != Settings.SessionMode.None)
                 {
-                    int bufID = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
+                    long bufID = (long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
                     StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-                    if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, sbPath) != -1)
+                    if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, sbPath) != -1)
                     {
                         string path = sbPath.ToString();
                         if (File.Exists(path))
@@ -1709,9 +1705,9 @@ namespace SourceCookifier
             }
             else
             {
-                int bufID = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
+                long bufID = (long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTBUFFERID, 0, 0);
                 StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-                if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, sbPath) != -1)
+                if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufID, sbPath) != -1)
                 {
                     string path = sbPath.ToString();
                     if (File.Exists(path))
@@ -1735,7 +1731,7 @@ namespace SourceCookifier
                 
             Main.TRACE("-END-");
         }
-        void SelectSubTagNodeByCurrentLine(TreeNode node, int line, ref Tag selTag, List<string> lstIdentifiers, string path)
+        void SelectSubTagNodeByCurrentLine(TreeNode node, long line, ref Tag selTag, List<string> lstIdentifiers, string path)
         {
             Tag tag = node as Tag;
             if ((tag != null)

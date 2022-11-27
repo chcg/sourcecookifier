@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NppPlugin.DllExport;
+using NppPluginNET;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using NppPluginNET;
-using NppPlugin.DllExport;
 
 namespace SourceCookifier
 {
@@ -19,10 +19,17 @@ namespace SourceCookifier
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void setInfo(NppData notepadPlusData)
         {
-            Main.TRACE("-START-");
-            PluginBase.nppData = notepadPlusData;
-            Main.CommandMenuInit();
-            Main.TRACE("-END-");
+            try
+            {
+                Main.TRACE("-START-");
+                PluginBase.nppData = notepadPlusData;
+                Main.CommandMenuInit();
+                Main.TRACE("-END-");
+            }
+            catch (Exception ex)
+            {
+                Main.ErrorOut(ex);
+            }
         }
 
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
@@ -38,35 +45,42 @@ namespace SourceCookifier
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static uint messageProc(uint Message, IntPtr wParam, IntPtr lParam)
         {
-            Main.TRACE(string.Format("Message=0x{0:x8} wParam=0x{1:x8} lParam=0x{2:x8}", Message, wParam, lParam));
-            if (Message == (uint)NppMsg.NPPM_MSGTOPLUGIN)
+            try
             {
-                CommunicationInfo communicationInfo = (CommunicationInfo)Marshal.PtrToStructure(
-                    (IntPtr)lParam, typeof(CommunicationInfo));
-                string srcModuleName = Marshal.PtrToStringAuto(communicationInfo.srcModuleName);
-                if ((communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_NORMAL) ||
-                    (communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_INCLUDES))
+                Main.TRACE(string.Format("Message=0x{0:x8} wParam=0x{1:x8} lParam=0x{2:x8}", Message, wParam, lParam));
+                if (Message == (uint)NppMsg.NPPM_MSGTOPLUGIN)
                 {
-                    string path = Marshal.PtrToStringAuto(communicationInfo.info);
-                    Main.TRACE(string.Format("Message=NPPM_MSGTOPLUGIN srcModuleName={0} internalMsg={1} path={2}",
-                        srcModuleName, communicationInfo.internalMsg, path));
-                    if ((Main.frmMain == null) || !Main.frmMain.Visible)
-                        Main.ShowFrmMain();
-                    if (!Main.frmMain.tsmiCookieSessionMode.Checked)
+                    CommunicationInfo communicationInfo = (CommunicationInfo)Marshal.PtrToStructure(
+                        (IntPtr)lParam, typeof(CommunicationInfo));
+                    string srcModuleName = Marshal.PtrToStringAuto(communicationInfo.srcModuleName);
+                    if ((communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_NORMAL) ||
+                        (communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_INCLUDES))
                     {
-                        Main.frmMain.tsmiCookieSessionMode.Checked = true;
-                        Settings.Configs.SessionMode = Settings.SessionMode.Cookie;
-                        Main.frmMain.tsDdbtnSession.Image = Properties.Resources.session_mode_sc;
-                        Main.frmMain.tsmiSingleFileMode.Checked = Main.frmMain.tsmiNppSessionMode.Checked = false;
-                        Main.frmMain.tsmiSessionSave.Enabled = Main.frmMain.tsmiSessionClear.Enabled = true;
-                        Main.frmMain.tvTags.Nodes.Clear();
-                        Source.invisibleSourceNodes.Clear();
-                        Source.invisibleIncludeFileNodes.Clear();
+                        string path = Marshal.PtrToStringAuto(communicationInfo.info);
+                        Main.TRACE(string.Format("Message=NPPM_MSGTOPLUGIN srcModuleName={0} internalMsg={1} path={2}",
+                            srcModuleName, communicationInfo.internalMsg, path));
+                        if ((Main.frmMain == null) || !Main.frmMain.Visible)
+                            Main.ShowFrmMain();
+                        if (!Main.frmMain.tsmiCookieSessionMode.Checked)
+                        {
+                            Main.frmMain.tsmiCookieSessionMode.Checked = true;
+                            Settings.Configs.SessionMode = Settings.SessionMode.Cookie;
+                            Main.frmMain.tsDdbtnSession.Image = Properties.Resources.session_mode_sc;
+                            Main.frmMain.tsmiSingleFileMode.Checked = Main.frmMain.tsmiNppSessionMode.Checked = false;
+                            Main.frmMain.tsmiSessionSave.Enabled = Main.frmMain.tsmiSessionClear.Enabled = true;
+                            Main.frmMain.tvTags.Nodes.Clear();
+                            Source.invisibleSourceNodes.Clear();
+                            Source.invisibleIncludeFileNodes.Clear();
+                        }
+                        Main.frmMain.droppedWithModKey = (communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_INCLUDES);
+                        Main.frmMain.DoTags(new string[] { path });
+                        Main.frmMain.droppedWithModKey = false;
                     }
-                    Main.frmMain.droppedWithModKey = (communicationInfo.internalMsg == NPEM_SOURCECOOKIFIER_ADDTOSESSION_INCLUDES);
-                    Main.frmMain.DoTags(new string[] { path });
-                    Main.frmMain.droppedWithModKey = false;
                 }
+            }
+            catch (Exception ex)
+            {
+                Main.ErrorOut(ex);
             }
             return 1;
         }
@@ -112,7 +126,7 @@ namespace SourceCookifier
                 {
                     Main.TRACE("notifyCode.nmhdr.code=NPPN_FILEBEFOREOPEN");
                     StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-                    if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (int)nc.nmhdr.idFrom, sbPath) != -1)
+                    if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, nc.nmhdr.idFrom, sbPath) != -1)
                     {
                         string path = sbPath.ToString();
                         if (Path.GetExtension(path) == ("." + Settings.Configs.SessionFileExt))
@@ -137,7 +151,7 @@ namespace SourceCookifier
                     if ((Main.frmMain != null) && Main.frmMain.Visible && (Settings.Configs.SessionMode == Settings.SessionMode.Npp))
                     {
                         StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-                        if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (int)nc.nmhdr.idFrom, path) != -1)
+                        if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, nc.nmhdr.idFrom, path) != -1)
                         {
                             if (File.Exists(path.ToString()))
                             {
@@ -152,7 +166,7 @@ namespace SourceCookifier
                     if (sessionFileOpened)
                     {
                         sessionFileOpened = false;
-                        Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MENUCOMMAND, 0, NppMenuCmd.IDM_FILE_CLOSE);
+                        Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MENUCOMMAND, 0, (long)NppMenuCmd.IDM_FILE_CLOSE);
                     }
                     else if (Main.skipTvRefresh)
                     {
@@ -161,7 +175,7 @@ namespace SourceCookifier
                     else if ((Main.frmMain != null) && Main.frmMain.Visible)
                     {
                         StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-                        if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (int)nc.nmhdr.idFrom, path) != -1)
+                        if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, nc.nmhdr.idFrom, path) != -1)
                         {
                             string sPath = path.ToString();
                             if (Settings.Configs.SessionMode == Settings.SessionMode.None)
@@ -204,7 +218,7 @@ namespace SourceCookifier
                     if ((Main.frmMain != null) && Main.frmMain.Visible)
                     {
                         StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-                        if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (int)nc.nmhdr.idFrom, path) != -1)
+                        if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, nc.nmhdr.idFrom, path) != -1)
                         {
                             if (File.Exists(path.ToString()))
                             {
@@ -227,7 +241,7 @@ namespace SourceCookifier
                         if ((Main.frmMain != null) && Main.frmMain.Visible && (Settings.Configs.SessionMode == Settings.SessionMode.Npp))
                         {
                             StringBuilder sbPath = new StringBuilder(Win32.MAX_PATH);
-                            if ((int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (int)nc.nmhdr.idFrom, sbPath) != -1)
+                            if ((long)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLPATHFROMBUFFERID, nc.nmhdr.idFrom, sbPath) != -1)
                             {
                                 string path = sbPath.ToString();
                                 if (File.Exists(path))
