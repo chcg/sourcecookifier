@@ -207,11 +207,11 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(ProjectDir)$(OutDir)..\Config"
-mkdir "$(ProjectDir)$(OutDir)..\Config\SourceCookifier"
-copy "$(ProjectDir)Setup\Config\SourceCookifier.languages.model.xml" "$(ProjectDir)$(OutDir)..\Config\SourceCookifier\
-mkdir "$(ProjectDir)$(OutDir)SourceCookifier\icons"
-copy "$(ProjectDir)Setup\SourceCookifier\ctags.exe" "$(ProjectDir)$(OutDir)SourceCookifier\
-copy "$(ProjectDir)Setup\SourceCookifier\icons\*.png" "$(ProjectDir)$(OutDir)SourceCookifier\icons</PostBuildEvent>
+    <PostBuildEvent>mkdir "$(ProjectDir)$(OutDir)bin"
+mkdir "$(ProjectDir)$(OutDir)icons"
+mkdir "$(ProjectDir)$(OutDir)setup"
+copy "$(ProjectDir)Setup\bin\ctags.exe" "$(ProjectDir)$(OutDir)bin\
+copy "$(ProjectDir)Setup\setup\SourceCookifier.languages.model.xml" "$(ProjectDir)$(OutDir)setup\
+copy "$(ProjectDir)Setup\icons\*.png" "$(ProjectDir)$(OutDir)icons</PostBuildEvent>
   </PropertyGroup>
 </Project>

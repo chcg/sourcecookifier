@@ -15,25 +15,6 @@ IF "%BUILD_ENV_C%" == "VC" (
   DEL *.obj
 )
 
-REM gcc (Cygwin):
-IF "%BUILD_ENV_C%" == "CYGWIN" (
-  IF "%CTAGS_DEBUG%" == "1" (
-    bash -c "gcc -O4 -o ctags.exe -save-temps -Wall -DDEBUG -mno-cygwin -DHAVE_FTRUNCATE %COMMON_OPTS% debug.c %TARGETS%"
-  ) ELSE (
-    bash -c "gcc -O4 -o ctags.exe -save-temps -Wall -mno-cygwin -DHAVE_FTRUNCATE %COMMON_OPTS% %TARGETS%"
-  )
-  rm *.i *.o *.s
-)
-
-REM gcc (MinGW):
-IF "%BUILD_ENV_C%" == "MINGW" (
-  IF "%CTAGS_DEBUG%" == "1" (
-    sh -c "gcc -O4 -o ctags.exe -save-temps -Wall -DDEBUG %COMMON_OPTS% debug.c %TARGETS%"
-  ) ELSE (
-    sh -c "gcc -O4 -o ctags.exe -save-temps -Wall %COMMON_OPTS% %TARGETS%"
-  )
-  rm *.i *.o *.s
-)
-
-COPY ctags.exe "..\SourceCookifier\Setup\SourceCookifier\ctags.exe"
-COPY ctags.exe "..\..\Notepad++\plugins\SourceCookifier\ctags.exe"
+COPY ctags.exe "..\SourceCookifier\Setup\bin\ctags.exe"
+MD "..\..\Notepad++\plugins\SourceCookifier\bin"
+COPY ctags.exe "..\..\Notepad++\plugins\SourceCookifier\bin\ctags.exe"

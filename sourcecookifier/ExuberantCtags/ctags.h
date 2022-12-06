@@ -15,8 +15,8 @@
 *   MACROS
 */
 #ifndef PROGRAM_VERSION
-# define PROGRAM_VERSION "5.8.7.SC"
-# define SOURCECOOKIFER_VERSION "0.7.3.0"
+# define PROGRAM_VERSION "5.8.10.SC"
+# define SOURCECOOKIFER_VERSION "0.10.0.0"
 #endif
 #define PROGRAM_NAME      "Exuberant Ctags"
 #define PROGRAM_URL       "http://ctags.sourceforge.net"

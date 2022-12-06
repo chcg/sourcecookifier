@@ -9,7 +9,7 @@ namespace SourceCookifier
 {
     class CTagsExe
     {
-        static string cTagsVersion = "5.8.7.SC";
+        static string cTagsVersion = "5.8.10.SC";
         static string cTagsExePath;
         static string tagsFilePath;
         static string stdOut;
@@ -19,7 +19,7 @@ namespace SourceCookifier
         
         public static void Init()
         {
-            cTagsExePath = Path.Combine(Settings.PluginSubFolder, "ctags.exe");
+            cTagsExePath = Path.Combine(Settings.PluginSubFolderBin, "ctags.exe");
             tagsFilePath = Path.Combine(Settings.ConfigDir, "SourceCookifier.tags");
             stdOut = "";
             Main.TRACE("CTags.exe path = " + cTagsExePath);
@@ -216,7 +216,7 @@ namespace SourceCookifier
             Main.TRACE("-START-");
             
             Process p = new Process();
-            p.StartInfo.WorkingDirectory = Settings.PluginSubFolder;
+            p.StartInfo.WorkingDirectory = Settings.PluginSubFolderBin;
             p.StartInfo.FileName = cTagsExePath;
             p.StartInfo.Arguments = "--options=NONE " + args;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

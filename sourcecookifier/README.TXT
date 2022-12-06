@@ -8,6 +8,8 @@ INSTALLATION:
 
 CHANGES:
 -------------
+    0.10.0
+       -Build for Notepad++ 64 bit and drop building for Notepad++ 32 bit
     0.7.3
        -fix: unicode functionality broken in N++
     0.7.2

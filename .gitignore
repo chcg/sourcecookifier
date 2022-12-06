@@ -1,4 +1,8 @@
 .vs
+*.7z
+*.pdb
+*.zip
+*.bin/
 obj
 /sourcecookifier/SourceCookifier/*.user
 /Notepad++/autoCompletion
@@ -16,3 +20,4 @@ obj
 /Notepad++/langs.xml
 /Notepad++/stylers.xml
 /Notepad++/shortcuts.xml
+/sourcecookifier/ExuberantCtags/*.exe

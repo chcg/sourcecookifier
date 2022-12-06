@@ -61,6 +61,10 @@ namespace SourceCookifier
             TRACE("-START-");
             try
             {
+                string sPluginSubFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Settings.PluginSubFolderBin = Path.Combine(sPluginSubFolder, "bin");
+                Settings.PluginSubFolderIcons = Path.Combine(sPluginSubFolder, "icons");
+                Settings.PluginSubFolderSetup = Path.Combine(sPluginSubFolder, "setup");
                 StringBuilder sbPluginConfigDir = new StringBuilder(Win32.MAX_PATH);
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbPluginConfigDir);
                 Settings.ConfigDir = sbPluginConfigDir.ToString();
@@ -70,7 +74,7 @@ namespace SourceCookifier
                 Settings.logFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".errorlog.txt");
                 Settings.configSettingsFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".config.xml");
                 Settings.languagesSettingsFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".languages.xml");
-                Settings.languagesModelFilePath = Path.Combine(Settings.ConfigDir, PluginName + ".languages.model.xml");
+                Settings.languagesModelFilePath = Path.Combine(Settings.PluginSubFolderSetup, PluginName + ".languages.model.xml");
 
                 try
                 {

@@ -381,7 +381,7 @@ namespace SourceCookifier
                     tbxIcon.Text = iconFilename;
                     if (!string.IsNullOrEmpty(iconFilename))
                     {
-                        string iconPath = Settings.iconFolder + iconFilename;
+                        string iconPath = Path.Combine(Settings.PluginSubFolderIcons, iconFilename);
                         if (File.Exists(iconPath))
                         {
                             pbxIcon.Image = new Bitmap(iconPath);
@@ -528,7 +528,7 @@ namespace SourceCookifier
                 ofd.DefaultExt = "*";
                 ofd.Filter = "Image file (*.*)|*.*";
                 ofd.Title = "Load image file";
-                ofd.InitialDirectory = Settings.iconFolder;
+                ofd.InitialDirectory = Settings.PluginSubFolderIcons;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     try

@@ -16,13 +16,14 @@ namespace SourceCookifier
 
         public static bool HideAtStartup = false;
 
-        public static string PluginSubFolder = "";
+        public static string PluginSubFolderBin = "";
+        public static string PluginSubFolderIcons = "";
+        public static string PluginSubFolderSetup = "";
         public static string ConfigDir = "";
         public static string logFilePath = "";
         public static string configSettingsFilePath = "";
         public static string languagesSettingsFilePath = "";
         public static string languagesModelFilePath = "";
-        public static string iconFolder = "";
 
         public enum SessionMode { None, Cookie, Npp }
         public enum TreeViewMode { Flat, FlatGrouped, Grouped, ClassSingle, ClassSession }
@@ -67,7 +68,6 @@ namespace SourceCookifier
         public static void LoadConfigs()
         {
             Main.TRACE("-START-");
-            PluginSubFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\SourceCookifier\\";
             if (File.Exists(configSettingsFilePath))
                 Configs = (Config)DeserializeObject(configSettingsFilePath, typeof(Config));
             else
@@ -85,7 +85,6 @@ namespace SourceCookifier
         public static void LoadSettings(TreeView treeview)
         {
             Main.TRACE("-START-");
-            iconFolder = PluginSubFolder + "icons\\";
             
             // CTags paths
             CTagsExe.Init();
@@ -433,7 +432,7 @@ namespace SourceCookifier
                     string iconFilename = Languages[language].TagTypes[tagtypename].IconFilename;
                     if (!string.IsNullOrEmpty(iconFilename))
                     {
-                        string iconFullPath = iconFolder + iconFilename;
+                        string iconFullPath = Path.Combine(PluginSubFolderIcons, iconFilename);
                         if (File.Exists(iconFullPath))
                         {
                             Main.TRACE(string.Format("Loading icon '{0}' for language '{1}'", iconFullPath, language));
