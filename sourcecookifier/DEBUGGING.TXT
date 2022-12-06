@@ -1,3 +1,4 @@
-This build is for debugging purposes only,
-and it will log into following file:
-"C:\SourceCookifier.TRACE.txt"
+There's a debug build in this package named '../bin/SourceCookifier.Debug.Build.dll'
+which you can use for debugging purposes. If you rename it to 'SourceCookifier.dll'
+and replace the original main plugin file with it, it will log into following file:
+"%TMP%\SourceCookifier.TRACE.txt"

@@ -832,7 +832,7 @@ namespace SourceCookifier
             {
                 if (string.IsNullOrEmpty(TRACEPATH))
                 {
-                    TRACEPATH = Environment.ExpandEnvironmentVariables("%SYSTEMDRIVE%\\SourceCookifier.TRACE.txt");
+                    TRACEPATH = Environment.ExpandEnvironmentVariables("%TMP%\\SourceCookifier.TRACE.txt");
                     TRACEPID = Process.GetCurrentProcess().Id.ToString("X04");
                 }
                 using (TextWriter w = new StreamWriter(TRACEPATH, true))
